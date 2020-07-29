@@ -5,48 +5,63 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:Converter_WPF"
 		mc:Ignorable="d"
-		Title="MainWindow" Height="165.333" Width="800">
-        <Grid Margin="0,0,0,-5">
+		Title="MainWindow" Height="150" Width="650" ResizeMode="NoResize">
+    <Grid Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="125*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="125*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Конвертировать из -->
-        <Border Grid.Column="0" BorderThickness="1" BorderBrush="DarkGray" Margin="10,10,5,14">
+        <Border Grid.Column="0" BorderThickness="1" BorderBrush="DarkGray" Margin="10,10,10,10">
             <StackPanel>
-                <TextBlock Margin ="20 15 10 0" Text="У меня есть" FontSize="15" FontWeight="Light"></TextBlock>
+                <TextBlock Margin ="20 5 10 0" Text="У меня есть" FontSize="15" FontWeight="Light"></TextBlock>
 
-                <Grid Margin="20 10 20 0">
+                <Grid Margin="15 5 20 0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="250*"/>
+                        <ColumnDefinition Width="80*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox BorderThickness="0" Grid.Column="0" Height="30" FontSize="20" Text="100" FontWeight="Bold"></TextBox>
-                    <ComboBox Name="cBox_availableCurrencies" BorderBrush="Red" Grid.Column="1"></ComboBox>
+                    <TextBox Name="tbox_srcCrncAmount" Grid.Column="0" FontSize="20" Text="100" FontWeight="Bold" TextChanged="tbox_srcCrncAmount_TextChanged" BorderThickness="0"/>
+                    <ComboBox Name="cbox_srcCrnc" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" FontSize="16" BorderThickness="0" FontWeight="Bold"/>
                 </Grid>
 
-                <TextBlock Margin="20 10 20 0" Text="1 originCurr = x currentCurr"></TextBlock>
+                <StackPanel Height="auto" Orientation="Horizontal" Margin="20 10 20 0">
+                    <TextBlock VerticalAlignment="Center" Text="1 "/>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_srcCrnc,Path=SelectedItem}"/>
+                    <TextBlock VerticalAlignment="Center" Text=" = "/>
+                    <TextBox Name="tbox_srcToTrgRate" VerticalAlignment="Center" Text="1,00" Margin="0,0,3,0" BorderThickness="0" FontWeight="Bold" TextChanged="tbox_srcToTrgRate_TextChanged"/>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_trgCrnc,Path=SelectedItem}"/>
+                </StackPanel>
             </StackPanel>
         </Border>
-       
-        <!-- Конвертировать в -->
-        <Border Grid.Column="1" BorderThickness="1" BorderBrush="DarkGray" Margin="5,10,10,14">
-            <StackPanel>
-                <TextBlock Margin ="20 15 10 0" Text="Я получу" FontSize="15" FontWeight="Light"></TextBlock>
 
-                <Grid Margin="20 10 20 0">
+        
+        
+        <!-- Конвертировать в -->
+        <Border Grid.Column="2" BorderThickness="1" BorderBrush="DarkGray" Margin="10,10,10,10">
+            <StackPanel>
+                <TextBlock Margin ="20 5 10 0" Text="Я получу" FontSize="15" FontWeight="Light"></TextBlock>
+
+                <Grid Margin="15 5 20 0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="250*"/>
+                        <ColumnDefinition Width="80*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox BorderThickness="0" Grid.Column="0" Height="30" FontSize="20" Text="100" FontWeight="Bold" IsReadOnly="True"></TextBox>
-                    <ComboBox BorderBrush="Red" Grid.Column="1"></ComboBox>
+                    <TextBox Name="tbox_trgCrncAmount" Grid.Column="0" FontSize="20" Text="100" FontWeight="Bold" TextChanged="tbox_trgCrncAmount_TextChanged" BorderThickness="0"/>
+                    <ComboBox Name="cbox_trgCrnc" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="16" BorderThickness="0" Background="#FFF0F0F0" FontWeight="Bold"/>
                 </Grid>
 
-                <TextBlock Margin="20 10 20 0" Text="1 currentCurr = x originCurr"></TextBlock>
+                <StackPanel Height="auto" Orientation="Horizontal" Margin="20 10 20 0">
+                    <TextBlock VerticalAlignment="Center" Text="1 "/>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_trgCrnc,Path=SelectedItem}"/>
+                    <TextBlock VerticalAlignment="Center" Text=" = "/>
+                    <TextBox Name="tbox_trgToSrcRate" VerticalAlignment="Center" Text="1,00" Margin="0,0,3,0" BorderThickness="0" FontWeight="Bold" TextChanged="tbox_trgToSrcRate_TextChanged"/>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_srcCrnc,Path=SelectedItem}"/>
+                </StackPanel>
             </StackPanel>
         </Border>
     </Grid>
