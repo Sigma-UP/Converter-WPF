@@ -23,7 +23,12 @@ namespace Converter_WPF
 
             string[] defaultCurrencies = new string[]
             {
-                "USD", "EUR", "UAH"
+                "USD", "EUR", "UAH", "AUD", "AZN",
+                "ALL", "DZD", "XCD", "AOA", "ARS",
+                "AWG", "AFN", "BSD", "BDT", "BBD",
+                "BHD", "BYN", "XOF", "BOB", "BRL",
+                "BIF", "BTN", "VUV", "GBP", "VES",
+                "XAF", "VND", "GYD", "GHS", "GMD"
             };
 
             foreach (string crnc in defaultCurrencies)
@@ -54,12 +59,14 @@ namespace Converter_WPF
 
         private void tbox_srcToTrgRate_TextChanged(object sender, TextChangedEventArgs e)
         {
-            
+            if (tbox_trgToSrcRate != null) 
+                tbox_trgToSrcRate.Text = (1.0 / double.Parse(tbox_srcToTrgRate.Text)).ToString();
         }
 
         private void tbox_trgToSrcRate_TextChanged(object sender, TextChangedEventArgs e)
         {
-            
+            if (tbox_srcToTrgRate != null)
+                tbox_srcToTrgRate.Text = (1.0 * double.Parse(tbox_trgToSrcRate.Text)).ToString();
         }
 
     }
