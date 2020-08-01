@@ -24,7 +24,7 @@
                         <ColumnDefinition Width="80*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Name="tbox_srcCrncAmount" Grid.Column="0" FontSize="20" Text="100,00" FontWeight="Bold" TextChanged="tbox_srcCrncAmount_TextChanged" BorderThickness="0"/>
+                    <TextBox Name="tbox_srcCrncAmount" Grid.Column="0" FontSize="20" Text="100,00" FontWeight="Bold" BorderThickness="0"/>
                     <ComboBox Name="cbox_srcCrnc" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" FontSize="16" BorderThickness="0" FontWeight="Bold" Margin="0,0,0,0"/>
                 </Grid>
 
@@ -32,7 +32,7 @@
                     <TextBlock VerticalAlignment="Center" Text="1 "/>
                     <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_srcCrnc,Path=SelectedItem}"/>
                     <TextBlock VerticalAlignment="Center" Text=" = "/>
-                    <TextBox Name="tbox_srcRate" Text="1,00" VerticalAlignment="Center" Margin="0,0,3,0" BorderThickness="0" FontWeight="Bold" TextChanged="tbox_srcRate_TextChanged"/>
+                    <TextBox Name="tbox_srcRate" Text="1,00" VerticalAlignment="Center" Margin="0,0,3,0" BorderThickness="0" FontWeight="Bold"/>
                     <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_trgCrnc,Path=SelectedItem}"/>
                 </StackPanel>
             </StackPanel>
@@ -51,7 +51,7 @@
                         <ColumnDefinition Width="80*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Name="tbox_trgCrncAmount" Grid.Column="0" FontSize="20" Text="100,00" FontWeight="Bold" TextChanged="tbox_trgCrncAmount_TextChanged" BorderThickness="0" IsReadOnly="False"/>
+                    <TextBox Name="tbox_trgCrncAmount" Grid.Column="0" FontSize="20" Text="100,00" FontWeight="Bold" BorderThickness="0" IsReadOnly="False"/>
                     <ComboBox Name="cbox_trgCrnc" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="16" BorderThickness="0" Background="#FFF0F0F0" FontWeight="Bold"/>
                 </Grid>
 
@@ -59,7 +59,7 @@
                     <TextBlock VerticalAlignment="Center" Text="1 "/>
                     <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_trgCrnc,Path=SelectedItem}"/>
                     <TextBlock VerticalAlignment="Center" Text=" = "/>
-                    <TextBox Name="tbox_trgRate" Text="1,00" VerticalAlignment="Center" Margin="0,0,3,0" BorderThickness="0" FontWeight="Bold" TextChanged="tbox_trgRate_TextChanged"/>
+                    <TextBox Name="tbox_trgRate" Text="1,00" VerticalAlignment="Center" Margin="0,0,3,0" BorderThickness="0" FontWeight="Bold"/>
                     <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_srcCrnc,Path=SelectedItem}"/>
                 </StackPanel>
             </StackPanel>
