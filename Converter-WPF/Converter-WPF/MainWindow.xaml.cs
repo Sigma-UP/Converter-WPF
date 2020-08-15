@@ -42,11 +42,11 @@ namespace Converter_WPF
 			tbox_trgCrncAmount.TextChanged += validate;
 			tbox_srcRate.TextChanged += validate;
 			tbox_trgRate.TextChanged += validate;
-			
+
 			TXT_DB.DB_Load(DB_path, cbox_srcCrnc, cbox_trgCrnc);
 		}
 
-        
+
 		private bool ValidateTextBoxInput()
 		{
 			bool isValid = true;
@@ -69,11 +69,25 @@ namespace Converter_WPF
 		}
 		private void btn_CurrAdd_Click(object sender, RoutedEventArgs e)
 		{
-			cbox_trgCrnc.Items.Add(tbox_NewCurrency.Text);
-			cbox_srcCrnc.Items.Add(tbox_NewCurrency.Text);
-			TXT_DB.SaveDataBase(DB_path, cbox_trgCrnc);
-			tbox_NewCurrency.Text = "added!";
-			tbox_NewCurrency.Background = Brushes.LightGreen;
+			string addStatus = "ADDED";
+			bool isAddAvailable = true;
+
+			foreach (string existedCurrency in cbox_srcCrnc.Items)
+				if (tbox_NewCurrency.Text == existedCurrency)
+				{
+					isAddAvailable = false;
+					addStatus = "ERROR";
+					break;
+				}
+			if (isAddAvailable)
+			{
+				cbox_trgCrnc.Items.Add(tbox_NewCurrency.Text);
+				cbox_srcCrnc.Items.Add(tbox_NewCurrency.Text);
+				TXT_DB.SaveDataBase(DB_path, cbox_trgCrnc);
+				tbox_NewCurrency.Background = Brushes.LightGreen;
+			}
+
+			tbox_NewCurrency.Text = addStatus;
 
 			var dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 			dispatcherTimer.Tick += delegate { tbox_NewCurrency.Background = Brushes.White; tbox_NewCurrency.Text = ""; dispatcherTimer.Stop(); };
@@ -99,7 +113,7 @@ namespace Converter_WPF
 				tbox_srcCrncAmount.TextChanged += tbox_srcCrncAmount_TextChanged;
 			}
 		}
-        
+
 		#region TextChanged event handlers
 
 		private void tbox_srcCrncAmount_TextChanged(object sender, TextChangedEventArgs e)
@@ -142,15 +156,15 @@ namespace Converter_WPF
 				Convert();
 			}
 		}
-        private void tbox_newCurrency_TextChanged(object sender, TextChangedEventArgs e)
+		private void tbox_newCurrency_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			bool isValid = false;
 			btn_CurrAdd.IsEnabled = false;
 
 			if ((StringOPS.isLetter(tbox_NewCurrency.Text) && tbox_NewCurrency.Text.Length == 3) || tbox_NewCurrency.Text.Length == 0)
-			{ 
+			{
 				tbox_NewCurrency.Background = Brushes.White;
-				if(tbox_NewCurrency.Text.Length == 3)
+				if (tbox_NewCurrency.Text.Length == 3)
 					isValid = true;
 			}
 			else
@@ -164,6 +178,16 @@ namespace Converter_WPF
 		}
 
 		#endregion
+
+		private void btn_close_Click(object sender, RoutedEventArgs e)
+		{
+			Application.Current.Shutdown();
+		}
+
+		private void grid_header_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			DragMove();
+		}
 	}
 }
 

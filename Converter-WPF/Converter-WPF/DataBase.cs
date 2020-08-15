@@ -8,8 +8,8 @@ using String_Advanced;
 
 namespace DATABASE
 {
-    public class TXT_DB
-    {
+	public class TXT_DB
+	{
 		public static void DB_Load(string db_path, ComboBox cb1, ComboBox cb2)
 		{
 			if (LoadDataBase(db_path, cb1, cb2))
@@ -78,29 +78,44 @@ namespace DATABASE
 		}
 
 		public static void DB_Validate(string path)
-        {
-			StreamReader reader =  new StreamReader(path);
+		{
+			StreamReader reader = new StreamReader(path);
 			bool isDatabaseBroken = false;
+			bool isFormatBroken = false, isRepeat = false;
 			string currentLine;
 			List<string> originalData = new List<string>();
 			List<string> editData = new List<string>();
 
-            while (!reader.EndOfStream)
-            {
+			while (!reader.EndOfStream)
+			{
 				currentLine = reader.ReadLine();
 				originalData.Add(currentLine);
-            }
+			}
 
-			for(int i = 0; i < originalData.Count; i++)
-            {
+			for (int i = 0; i < originalData.Count; i++)
+			{
+				isFormatBroken = false;
+				isRepeat = false;
 				if (originalData[i].Length == 3 && StringOPS.isLetter(originalData[i]) && StringOPS.isUpper(originalData[i]))
+				{
+					foreach (string existCurrency in editData)
+						if (originalData[i] == existCurrency)
+						{
+							isRepeat = true;
+							break;
+						}
+				}
+				else
+					isFormatBroken = true;
+
+				if (!isRepeat && !isFormatBroken)
 					editData.Add(originalData[i]);
 				else
 					isDatabaseBroken = true;
-            }
+			}
 			reader.Close();
-            if (isDatabaseBroken)
-            {
+			if (isDatabaseBroken)
+			{
 				StreamWriter sw;
 				MessageBox.Show("Oops...");
 				try
@@ -117,6 +132,6 @@ namespace DATABASE
 					sw.WriteLine(editData[i]);
 				sw.Close();
 			}
-        }
+		}
 	}
 }
