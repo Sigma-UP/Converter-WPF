@@ -4,85 +4,111 @@
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:Converter_WPF"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
 		mc:Ignorable="d"
-		Title="MainWindow" Height="150" Width="698.5" ResizeMode="NoResize">
-    <Grid Margin="0,0,-1,0">
+		Title="MainWindow" Height="150" Width="698.5" ResizeMode="NoResize" WindowStyle="None">
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="134*"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="134*"/>
-            <ColumnDefinition Width="60*"/>
-        </Grid.ColumnDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30px"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <!-- Конвертировать из -->
-        <Border Grid.Column="0" BorderThickness="1" BorderBrush="DarkGray" Margin="10,10,10,10">
-            <StackPanel>
-                <TextBlock Margin ="20 5 10 0" Text="У меня есть" FontSize="15" FontWeight="Light"></TextBlock>
+        <!--Header-->
+        <Grid x:Name="grid_header" Grid.Row="0" Background="DarkGray" MouseDown="grid_header_MouseDown">
+            <!--Window manipulation | Right corner -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10, 0">
+                <Button x:Name="btn_close" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Background="{x:Null}" BorderBrush="{x:Null}" Width="30" Height="30" VerticalAlignment="Bottom" Click="btn_close_Click">
+                    <materialDesign:PackIcon Kind="Power" Width="25" Height="25"/>
+                </Button>
+            </StackPanel>
+            <!--Window name | Left corner-->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,3,0,0">
+                <materialDesign:PackIcon Kind="Calculator" Foreground="White"/>
+                <TextBlock Margin="5,0,0,0" Text="Converter" Foreground="LightGray" />
+            </StackPanel>
+        </Grid>
 
-                <Grid Margin="15 5 20 0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="250*"/>
-                        <ColumnDefinition Width="80*"/>
-                    </Grid.ColumnDefinitions>
+        <!--Main Program-->
+        <Grid Margin="0,0,-1,0" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="134*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="134*"/>
+                <ColumnDefinition Width="60*"/>
+            </Grid.ColumnDefinitions>
 
-                    <TextBox Name="tbox_srcCrncAmount" Grid.Column="0" FontSize="20" Text="100,00" FontWeight="Bold" BorderThickness="0"/>
-                    <ComboBox Name="cbox_srcCrnc" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="16" BorderThickness="0" Background="#FFF0F0F0" FontWeight="Bold" Grid.ColumnSpan="2" Margin="146,0,0,0"/>
-                </Grid>
+            <!-- Конвертировать из -->
+            <Border Grid.Column="0" BorderThickness="1" BorderBrush="DarkGray" Margin="10,10,10,10">
+                <StackPanel>
+                    <TextBlock Margin ="20 5 10 0" Text="У меня есть" FontSize="15" FontWeight="Light"></TextBlock>
 
-                <StackPanel Height="auto" Orientation="Horizontal" Margin="20 10 20 0">
-                    <TextBlock VerticalAlignment="Center" Text="1 "/>
-                    <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_srcCrnc,Path=SelectedItem}"/>
-                    <TextBlock VerticalAlignment="Center" Text=" = "/>
-                    <TextBox Name="tbox_srcRate" Text="1,00" VerticalAlignment="Center" Margin="0,0,3,0" BorderThickness="0" FontWeight="Bold"/>
-                    <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_trgCrnc,Path=SelectedItem}"/>
+                    <Grid Margin="15 5 20 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="250*"/>
+                            <ColumnDefinition Width="80*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Name="tbox_srcCrncAmount" Grid.Column="0" FontSize="20" Text="100,00" FontWeight="Bold" BorderThickness="0"/>
+                        <ComboBox Name="cbox_srcCrnc" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="16" BorderThickness="0" Background="#FFF0F0F0" FontWeight="Bold" Grid.ColumnSpan="2" Margin="146,0,0,0"/>
+                    </Grid>
+
+                    <StackPanel Height="auto" Orientation="Horizontal" Margin="20 10 20 0">
+                        <TextBlock VerticalAlignment="Center" Text="1 "/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_srcCrnc,Path=SelectedItem}"/>
+                        <TextBlock VerticalAlignment="Center" Text=" = "/>
+                        <TextBox Name="tbox_srcRate" Text="1,00" VerticalAlignment="Center" Margin="0,0,3,0" BorderThickness="0" FontWeight="Bold"/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_trgCrnc,Path=SelectedItem}"/>
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
-        </Border>
+            </Border>
 
-        <!-- Конвертировать в -->
-        <Border Grid.Column="2" BorderThickness="1" BorderBrush="DarkGray" Margin="10,10,10,10">
-            <StackPanel>
-                <TextBlock Margin ="20 5 10 0" Text="Я получу" FontSize="15" FontWeight="Light"></TextBlock>
+            <!-- Конвертировать в -->
+            <Border Grid.Column="2" BorderThickness="1" BorderBrush="DarkGray" Margin="10,10,10,10">
+                <StackPanel>
+                    <TextBlock Margin ="20 5 10 0" Text="Я получу" FontSize="15" FontWeight="Light"></TextBlock>
 
-                <Grid Margin="15 5 20 0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="250*"/>
-                        <ColumnDefinition Width="80*"/>
-                    </Grid.ColumnDefinitions>
+                    <Grid Margin="15 5 20 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="250*"/>
+                            <ColumnDefinition Width="80*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <TextBox Name="tbox_trgCrncAmount" Grid.Column="0" FontSize="20" Text="100,00" FontWeight="Bold" BorderThickness="0" IsReadOnly="False"/>
-                    <ComboBox Name="cbox_trgCrnc" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="16" BorderThickness="0" Background="#FFF0F0F0" FontWeight="Bold" Grid.ColumnSpan="2" Margin="146,0,0,0"/>
-                </Grid>
+                        <TextBox Name="tbox_trgCrncAmount" Grid.Column="0" FontSize="20" Text="100,00" FontWeight="Bold" BorderThickness="0" IsReadOnly="False"/>
+                        <ComboBox Name="cbox_trgCrnc" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="16" BorderThickness="0" Background="#FFF0F0F0" FontWeight="Bold" Grid.ColumnSpan="2" Margin="146,0,0,0"/>
+                    </Grid>
 
-                <StackPanel Height="auto" Orientation="Horizontal" Margin="20 10 20 0">
-                    <TextBlock VerticalAlignment="Center" Text="1 "/>
-                    <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_trgCrnc,Path=SelectedItem}"/>
-                    <TextBlock VerticalAlignment="Center" Text=" = "/>
-                    <TextBox Name="tbox_trgRate" Text="1,00" VerticalAlignment="Center" Margin="0,0,3,0" BorderThickness="0" FontWeight="Bold"/>
-                    <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_srcCrnc,Path=SelectedItem}"/>
+                    <StackPanel Height="auto" Orientation="Horizontal" Margin="20 10 20 0">
+                        <TextBlock VerticalAlignment="Center" Text="1 "/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_trgCrnc,Path=SelectedItem}"/>
+                        <TextBlock VerticalAlignment="Center" Text=" = "/>
+                        <TextBox Name="tbox_trgRate" Text="1,00" VerticalAlignment="Center" Margin="0,0,3,0" BorderThickness="0" FontWeight="Bold"/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_srcCrnc,Path=SelectedItem}"/>
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
-        </Border>
+            </Border>
 
-        <!-- Доп. опции -->
-        <Border Grid.Column="3" Margin="10,10,10,10">
-            <StackPanel VerticalAlignment="Center">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="30"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox    x:Name="tbox_NewCurrency" Grid.Column="0" 
-                                CharacterCasing="Upper" FontWeight="Bold" 
-                                FontSize="17" Height="30" 
-                                TextChanged="tbox_newCurrency_TextChanged"/>
-                    <Button     x:Name="btn_CurrAdd" Grid.Column="1" 
-                                IsEnabled="False"  Click="btn_CurrAdd_Click">
-                        <Image Source="icons\Add-New.png" Width="27" Height="26"/>
-                    </Button>
-                </Grid>
-            </StackPanel>
-        </Border>
+            <!-- Доп. опции -->
+            <Border Grid.Column="3" Margin="10,10,10,10">
+                <StackPanel VerticalAlignment="Center">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="30"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox    x:Name="tbox_NewCurrency" Grid.Column="0" 
+									CharacterCasing="Upper" FontWeight="Bold" 
+									FontSize="17" Height="30" 
+									TextChanged="tbox_newCurrency_TextChanged"/>
+                        <Button	    x:Name="btn_CurrAdd" Grid.Column="1" 
+									IsEnabled="False"  Click="btn_CurrAdd_Click" 
+                                    Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
+                                    VerticalAlignment="Bottom" Width="Auto" Height="Auto">
+                            <materialDesign:PackIcon Kind="Add" Height="27" Width="27"/>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

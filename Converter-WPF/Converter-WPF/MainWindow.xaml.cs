@@ -46,7 +46,7 @@ namespace Converter_WPF
 			TXT_DB.DB_Load(DB_path, cbox_srcCrnc, cbox_trgCrnc);
 		}
 
-        
+		
 		private bool ValidateTextBoxInput()
 		{
 			bool isValid = true;
@@ -99,7 +99,7 @@ namespace Converter_WPF
 				tbox_srcCrncAmount.TextChanged += tbox_srcCrncAmount_TextChanged;
 			}
 		}
-        
+		
 		#region TextChanged event handlers
 
 		private void tbox_srcCrncAmount_TextChanged(object sender, TextChangedEventArgs e)
@@ -142,7 +142,7 @@ namespace Converter_WPF
 				Convert();
 			}
 		}
-        private void tbox_newCurrency_TextChanged(object sender, TextChangedEventArgs e)
+		private void tbox_newCurrency_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			bool isValid = false;
 			btn_CurrAdd.IsEnabled = false;
@@ -163,7 +163,17 @@ namespace Converter_WPF
 				btn_CurrAdd.IsEnabled = true;
 		}
 
-		#endregion
-	}
+        #endregion
+
+        private void btn_close_Click(object sender, RoutedEventArgs e)
+        {
+			Application.Current.Shutdown();
+        }
+
+        private void grid_header_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+				DragMove();
+		}
+    }
 }
 
