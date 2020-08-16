@@ -5,12 +5,12 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:Converter_WPF"
 		mc:Ignorable="d"
-		Title="MainWindow" Height="150" Width="698.5" ResizeMode="NoResize">
+		Title="MainWindow" Height="150" Width="700" ResizeMode="NoResize">
     <Grid Margin="0,0,-1,0">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="134*"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="0*"/>
             <ColumnDefinition Width="134*"/>
             <ColumnDefinition Width="60*"/>
         </Grid.ColumnDefinitions>
