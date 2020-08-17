@@ -110,8 +110,9 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox    x:Name="tbox_NewCurrency" Grid.Column="0" 
-                                        Background="LightGray"
+                            <TextBox    
+                                    x:Name="tbox_NewCurrency" Grid.Column="0" 
+                                    Background="LightGray" 
 									CharacterCasing="Upper" FontWeight="Bold" 
 									FontSize="17" Height="27"
                                     Margin="5"
