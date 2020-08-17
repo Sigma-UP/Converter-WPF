@@ -78,13 +78,28 @@ namespace Converter_WPF
 		}
 		private void btn_CurrAdd_Click(object sender, RoutedEventArgs e)
 		{
-			cbox_trgCrnc.Items.Add(tbox_NewCurrency.Text);
-			cbox_srcCrnc.Items.Add(tbox_NewCurrency.Text);
-			TXT_DB.SaveDataBase(DB_path, cbox_trgCrnc);
-			tbox_NewCurrency.Text = "added!";
+			string addStatus = "ADDED";
+			bool isAddAvailable = true;
+
+			foreach (string existedCurrency in cbox_srcCrnc.Items)
+				if (tbox_NewCurrency.Text == existedCurrency)
+				{
+					isAddAvailable = false;
+					addStatus = "ERROR";
+					break;
+				}
+			if (isAddAvailable)
+			{
+				cbox_trgCrnc.Items.Add(tbox_NewCurrency.Text);
+				cbox_srcCrnc.Items.Add(tbox_NewCurrency.Text);
+				TXT_DB.SaveDataBase(DB_path, cbox_trgCrnc);
+				tbox_NewCurrency.Background = Brushes.LightGreen;
+			}
+
+			tbox_NewCurrency.Text = addStatus;
 
 			var dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-			dispatcherTimer.Tick += delegate { tbox_NewCurrency.Text = ""; dispatcherTimer.Stop(); };
+			dispatcherTimer.Tick += delegate { tbox_NewCurrency.Background = Brushes.LightGray; tbox_NewCurrency.Text = ""; dispatcherTimer.Stop(); };
 			dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
 			dispatcherTimer.Start();
 		}
