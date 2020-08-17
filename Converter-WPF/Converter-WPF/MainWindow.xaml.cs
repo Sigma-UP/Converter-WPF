@@ -56,7 +56,6 @@ namespace Converter_WPF
 			cbox_trgCrnc.SelectedIndex = 1;
 		}
 
-
 		private bool ValidateTextBoxInput()
 		{
 			bool isValid = true;
@@ -66,7 +65,7 @@ namespace Converter_WPF
 			foreach (var tbox in tboxes)
 			{
 				if (StringOPS.isNumber(tbox.Text) && double.Parse(tbox.Text) > 0)
-					tbox.Background = Brushes.White;
+					tbox.Background = Brushes.LightGray;
 				else
 				{
 					tbox.Background = (Brush)new BrushConverter().ConvertFrom("#FFFFAFAF");
@@ -83,10 +82,9 @@ namespace Converter_WPF
 			cbox_srcCrnc.Items.Add(tbox_NewCurrency.Text);
 			TXT_DB.SaveDataBase(DB_path, cbox_trgCrnc);
 			tbox_NewCurrency.Text = "added!";
-			tbox_NewCurrency.Background = Brushes.LightGreen;
 
 			var dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-			dispatcherTimer.Tick += delegate { tbox_NewCurrency.Background = Brushes.White; tbox_NewCurrency.Text = ""; dispatcherTimer.Stop(); };
+			dispatcherTimer.Tick += delegate { tbox_NewCurrency.Text = ""; dispatcherTimer.Stop(); };
 			dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
 			dispatcherTimer.Start();
 		}
@@ -153,14 +151,14 @@ namespace Converter_WPF
 				Convert();
 			}
 		}
-        private void tbox_newCurrency_TextChanged(object sender, TextChangedEventArgs e)
+		private void tbox_newCurrency_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			bool isValid = false;
 			btn_CurrAdd.IsEnabled = false;
 
 			if ((StringOPS.isLetter(tbox_NewCurrency.Text) && tbox_NewCurrency.Text.Length == 3) || tbox_NewCurrency.Text.Length == 0)
 			{ 
-				tbox_NewCurrency.Background = Brushes.White;
+				tbox_NewCurrency.Background = Brushes.LightGray;
 				if(tbox_NewCurrency.Text.Length == 3)
 					isValid = true;
 			}
@@ -176,6 +174,16 @@ namespace Converter_WPF
 
         #endregion
 
+        private void btn_close_Click(object sender, RoutedEventArgs e)
+        {
+			Application.Current.Shutdown();
+        }
+
+        private void grid_header_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+				DragMove();
+		}
+    }
 
         #region Currency ComboBox event handlers
 
