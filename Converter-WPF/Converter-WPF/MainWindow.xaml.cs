@@ -107,7 +107,7 @@ namespace Converter_WPF
 				tbox_srcCrncAmount.TextChanged += tbox_srcCrncAmount_TextChanged;
 			}
 		}
-        
+
 
 		#region TextChanged event handlers
 
@@ -157,9 +157,9 @@ namespace Converter_WPF
 			btn_CurrAdd.IsEnabled = false;
 
 			if ((StringOPS.isLetter(tbox_NewCurrency.Text) && tbox_NewCurrency.Text.Length == 3) || tbox_NewCurrency.Text.Length == 0)
-			{ 
+			{
 				tbox_NewCurrency.Background = Brushes.LightGray;
-				if(tbox_NewCurrency.Text.Length == 3)
+				if (tbox_NewCurrency.Text.Length == 3)
 					isValid = true;
 			}
 			else
@@ -172,25 +172,25 @@ namespace Converter_WPF
 				btn_CurrAdd.IsEnabled = true;
 		}
 
-        #endregion
+		#endregion
 
-        private void btn_close_Click(object sender, RoutedEventArgs e)
-        {
+		private void btn_close_Click(object sender, RoutedEventArgs e)
+		{
 			Application.Current.Shutdown();
-        }
-
-        private void grid_header_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-				DragMove();
 		}
-    }
 
-        #region Currency ComboBox event handlers
+		private void grid_header_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			DragMove();
+		}
 
-        private string srcDeletedCrnc;
+
+		#region Currency ComboBox event handlers
+
+		private string srcDeletedCrnc;
 		private int srcDeletedIndex;
-        private void cbox_srcCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+		private void cbox_srcCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
 			if (trgDeletedCrnc != null)
 				cbox_trgCrnc.Items.Insert(trgDeletedIndex, trgDeletedCrnc);
 
@@ -202,7 +202,7 @@ namespace Converter_WPF
 		private string trgDeletedCrnc;
 		private int trgDeletedIndex;
 		private void cbox_trgCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+		{
 			if (srcDeletedCrnc != null)
 				cbox_srcCrnc.Items.Insert(srcDeletedIndex, srcDeletedCrnc);
 
@@ -215,7 +215,7 @@ namespace Converter_WPF
 		#region ComboBox Search
 
 		private void cbox_ShowAllItems(ComboBox cbox)
-        {
+		{
 			for (int i = 0; i < cbox.Items.Count; i++)
 			{
 				ComboBoxItem cbItem = (ComboBoxItem)cbox.ItemContainerGenerator.ContainerFromIndex(i);
@@ -230,7 +230,7 @@ namespace Converter_WPF
 
 			if (cbox.SelectedIndex == -1)
 				cbox.SelectedIndex = 0;
-			
+
 			if (!cbox.IsDropDownOpen)
 				cbox_ShowAllItems(cbox);
 		}
