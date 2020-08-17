@@ -56,7 +56,10 @@
                                       VerticalAlignment="Center" FontSize="16"
                                       BorderThickness="0" Background="#FFF0F0F0" 
                                       FontFamily="Yu Gothic UI Semilight"
-                                      Margin="2"/>
+                                      Margin="2"
+                                      IsEditable="True" 
+                                      IsTextSearchEnabled="False" 
+                                      TextBoxBase.TextChanged="cbox_TextChanged"/>
                          </Border>
         </Grid>
 
@@ -87,7 +90,10 @@
                                       VerticalAlignment="Center" FontSize="16"
                                       BorderThickness="0" Background="#FFF0F0F0" 
                                       FontFamily="Yu Gothic UI Semilight"
-                                      Margin="2"/>
+                                      Margin="2"
+                                      IsEditable="True" 
+                                      IsTextSearchEnabled="False" 
+                                      TextBoxBase.TextChanged="cbox_TextChanged"/>
                         </Border>
                     </Grid>
 

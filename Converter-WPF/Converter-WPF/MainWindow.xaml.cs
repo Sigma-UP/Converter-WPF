@@ -107,7 +107,7 @@ namespace Converter_WPF
 				tbox_srcCrncAmount.TextChanged += tbox_srcCrncAmount_TextChanged;
 			}
 		}
-        
+
 
 		#region TextChanged event handlers
 
@@ -157,9 +157,9 @@ namespace Converter_WPF
 			btn_CurrAdd.IsEnabled = false;
 
 			if ((StringOPS.isLetter(tbox_NewCurrency.Text) && tbox_NewCurrency.Text.Length == 3) || tbox_NewCurrency.Text.Length == 0)
-			{ 
+			{
 				tbox_NewCurrency.Background = Brushes.LightGray;
-				if(tbox_NewCurrency.Text.Length == 3)
+				if (tbox_NewCurrency.Text.Length == 3)
 					isValid = true;
 			}
 			else
@@ -172,18 +172,18 @@ namespace Converter_WPF
 				btn_CurrAdd.IsEnabled = true;
 		}
 
-        #endregion
+		#endregion
 
-        private void btn_close_Click(object sender, RoutedEventArgs e)
-        {
+		private void btn_close_Click(object sender, RoutedEventArgs e)
+		{
 			Application.Current.Shutdown();
-        }
-
-        private void grid_header_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-				DragMove();
 		}
-    }
+
+		private void grid_header_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			DragMove();
+		}
+	
 
         #region Currency ComboBox event handlers
 
@@ -239,7 +239,6 @@ namespace Converter_WPF
 		{
 			ComboBox cbox = e.Source as ComboBox;
 			cbox_ShowAllItems(cbox);
-			cbox.IsDropDownOpen = true;
 		}
 
 		private void cbox_LostFocus(object sender, RoutedEventArgs e)
@@ -247,7 +246,6 @@ namespace Converter_WPF
 			ComboBox cbox = e.Source as ComboBox;
 			cbox.Text = cbox.SelectedItem as string;
 			cbox_ShowAllItems(cbox);
-			cbox.IsDropDownOpen = false;
 		}
 
 		private void cbox_TextChanged(object sender, TextChangedEventArgs e)
