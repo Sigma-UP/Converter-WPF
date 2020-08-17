@@ -5,12 +5,14 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:Converter_WPF"
 		mc:Ignorable="d"
-		Title="MainWindow" Height="150" Width="650" ResizeMode="NoResize">
-    <Grid Margin="0,0,0,0">
+		Title="MainWindow" Height="150" Width="700" ResizeMode="NoResize">
+    <Grid Margin="0,0,-1,0">
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="125*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="125*"/>
+            <ColumnDefinition Width="134*"/>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition Width="134*"/>
+            <ColumnDefinition Width="60*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Конвертировать из -->
@@ -20,12 +22,12 @@
 
                 <Grid Margin="15 5 20 0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="250*"/>
-                        <ColumnDefinition Width="80*"/>
+                        <ColumnDefinition Width="100*"/>
+                        <ColumnDefinition Width="40*"/>
                     </Grid.ColumnDefinitions>
 
                     <TextBox Name="tbox_srcCrncAmount" Grid.Column="0" FontSize="20" Text="100,00" FontWeight="Bold" BorderThickness="0"/>
-                    <ComboBox Name="cbox_srcCrnc" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" FontSize="16" BorderThickness="0" FontWeight="Bold" Margin="0,0,0,0"/>
+                    <ComboBox Name="cbox_srcCrnc" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="16" BorderThickness="0" FontWeight="Bold" Grid.Column="1" IsEditable="True" IsTextSearchEnabled="False" TextBoxBase.TextChanged="cbox_TextChanged"/>
                 </Grid>
 
                 <StackPanel Height="auto" Orientation="Horizontal" Margin="20 10 20 0">
@@ -38,8 +40,6 @@
             </StackPanel>
         </Border>
 
-
-
         <!-- Конвертировать в -->
         <Border Grid.Column="2" BorderThickness="1" BorderBrush="DarkGray" Margin="10,10,10,10">
             <StackPanel>
@@ -47,12 +47,12 @@
 
                 <Grid Margin="15 5 20 0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="250*"/>
-                        <ColumnDefinition Width="80*"/>
+                        <ColumnDefinition Width="100*"/>
+                        <ColumnDefinition Width="40*"/>
                     </Grid.ColumnDefinitions>
 
                     <TextBox Name="tbox_trgCrncAmount" Grid.Column="0" FontSize="20" Text="100,00" FontWeight="Bold" BorderThickness="0" IsReadOnly="False"/>
-                    <ComboBox Name="cbox_trgCrnc" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="16" BorderThickness="0" Background="#FFF0F0F0" FontWeight="Bold"/>
+                    <ComboBox Name="cbox_trgCrnc" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="16" BorderThickness="0" FontWeight="Bold" Grid.Column="1"  IsEditable="True" IsTextSearchEnabled="False" TextBoxBase.TextChanged="cbox_TextChanged"/>
                 </Grid>
 
                 <StackPanel Height="auto" Orientation="Horizontal" Margin="20 10 20 0">
@@ -62,6 +62,26 @@
                     <TextBox Name="tbox_trgRate" Text="1,00" VerticalAlignment="Center" Margin="0,0,3,0" BorderThickness="0" FontWeight="Bold"/>
                     <TextBlock VerticalAlignment="Center" Text="{Binding ElementName=cbox_srcCrnc,Path=SelectedItem}"/>
                 </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Доп. опции -->
+        <Border Grid.Column="3" Margin="10,10,10,10">
+            <StackPanel VerticalAlignment="Center">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="30"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox    x:Name="tbox_NewCurrency" Grid.Column="0" 
+                                CharacterCasing="Upper" FontWeight="Bold" 
+                                FontSize="17" Height="30" 
+                                TextChanged="tbox_newCurrency_TextChanged"/>
+                    <Button     x:Name="btn_CurrAdd" Grid.Column="1" 
+                                IsEnabled="False"  Click="btn_CurrAdd_Click">
+                        <Image Source="icons\Add-New.png" Width="27" Height="26"/>
+                    </Button>
+                </Grid>
             </StackPanel>
         </Border>
     </Grid>
