@@ -183,14 +183,14 @@ namespace Converter_WPF
 		{
 			DragMove();
 		}
-	
 
-        #region Currency ComboBox event handlers
 
-        private string srcDeletedCrnc;
+		#region Currency ComboBox event handlers
+
+		private string srcDeletedCrnc;
 		private int srcDeletedIndex;
-        private void cbox_srcCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+		private void cbox_srcCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
 			if (trgDeletedCrnc != null)
 				cbox_trgCrnc.Items.Insert(trgDeletedIndex, trgDeletedCrnc);
 
@@ -202,7 +202,7 @@ namespace Converter_WPF
 		private string trgDeletedCrnc;
 		private int trgDeletedIndex;
 		private void cbox_trgCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+		{
 			if (srcDeletedCrnc != null)
 				cbox_srcCrnc.Items.Insert(srcDeletedIndex, srcDeletedCrnc);
 
@@ -215,7 +215,7 @@ namespace Converter_WPF
 		#region ComboBox Search
 
 		private void cbox_ShowAllItems(ComboBox cbox)
-        {
+		{
 			for (int i = 0; i < cbox.Items.Count; i++)
 			{
 				ComboBoxItem cbItem = (ComboBoxItem)cbox.ItemContainerGenerator.ContainerFromIndex(i);
@@ -230,7 +230,7 @@ namespace Converter_WPF
 
 			if (cbox.SelectedIndex == -1)
 				cbox.SelectedIndex = 0;
-			
+
 			if (!cbox.IsDropDownOpen)
 				cbox_ShowAllItems(cbox);
 		}
