@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -23,8 +23,6 @@ namespace Converter_WPF
 		public MainWindow()
 		{
 			InitializeComponent();
-			cbox_srcCrnc.SelectedIndex = 0;
-			cbox_trgCrnc.SelectedIndex = 2;
 
 			srcAmount = double.Parse(tbox_srcCrncAmount.Text);
 			trgAmount = double.Parse(tbox_trgCrncAmount.Text);
@@ -42,11 +40,22 @@ namespace Converter_WPF
 			tbox_trgCrncAmount.TextChanged += validate;
 			tbox_srcRate.TextChanged += validate;
 			tbox_trgRate.TextChanged += validate;
-			
+
+			cbox_srcCrnc.SelectionChanged += cbox_SelectionChanged;
+			cbox_trgCrnc.SelectionChanged += cbox_SelectionChanged;
+			cbox_srcCrnc.SelectionChanged += cbox_srcCrnc_SelectionChanged;
+			cbox_trgCrnc.SelectionChanged += cbox_trgCrnc_SelectionChanged;
+			cbox_srcCrnc.GotFocus += cbox_GotFocus;
+			cbox_trgCrnc.GotFocus += cbox_GotFocus;
+			cbox_srcCrnc.LostFocus += cbox_LostFocus;
+			cbox_trgCrnc.LostFocus += cbox_LostFocus;
+
 			TXT_DB.DB_Load(DB_path, cbox_srcCrnc, cbox_trgCrnc);
+
+			cbox_srcCrnc.SelectedIndex = 0;
+			cbox_trgCrnc.SelectedIndex = 1;
 		}
 
-		
 		private bool ValidateTextBoxInput()
 		{
 			bool isValid = true;
@@ -98,7 +107,8 @@ namespace Converter_WPF
 				tbox_srcCrncAmount.TextChanged += tbox_srcCrncAmount_TextChanged;
 			}
 		}
-		
+        
+
 		#region TextChanged event handlers
 
 		private void tbox_srcCrncAmount_TextChanged(object sender, TextChangedEventArgs e)
@@ -174,5 +184,121 @@ namespace Converter_WPF
 				DragMove();
 		}
     }
+
+        #region Currency ComboBox event handlers
+
+        private string srcDeletedCrnc;
+		private int srcDeletedIndex;
+        private void cbox_srcCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+			if (trgDeletedCrnc != null)
+				cbox_trgCrnc.Items.Insert(trgDeletedIndex, trgDeletedCrnc);
+
+			trgDeletedCrnc = cbox_srcCrnc.SelectedItem as string;
+			trgDeletedIndex = cbox_srcCrnc.SelectedIndex;
+			cbox_trgCrnc.Items.Remove(trgDeletedCrnc);
+		}
+
+		private string trgDeletedCrnc;
+		private int trgDeletedIndex;
+		private void cbox_trgCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+			if (srcDeletedCrnc != null)
+				cbox_srcCrnc.Items.Insert(srcDeletedIndex, srcDeletedCrnc);
+
+			srcDeletedCrnc = cbox_trgCrnc.SelectedItem as string;
+			srcDeletedIndex = cbox_trgCrnc.SelectedIndex;
+			cbox_srcCrnc.Items.Remove(srcDeletedCrnc);
+		}
+
+
+		#region ComboBox Search
+
+		private void cbox_ShowAllItems(ComboBox cbox)
+        {
+			for (int i = 0; i < cbox.Items.Count; i++)
+			{
+				ComboBoxItem cbItem = (ComboBoxItem)cbox.ItemContainerGenerator.ContainerFromIndex(i);
+				if (cbItem != null)
+					cbItem.Visibility = Visibility.Visible;
+			}
+		}
+
+		private void cbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			ComboBox cbox = e.Source as ComboBox;
+
+			if (cbox.SelectedIndex == -1)
+				cbox.SelectedIndex = 0;
+			
+			if (!cbox.IsDropDownOpen)
+				cbox_ShowAllItems(cbox);
+		}
+
+		private void cbox_GotFocus(object sender, RoutedEventArgs e)
+		{
+			ComboBox cbox = e.Source as ComboBox;
+			cbox_ShowAllItems(cbox);
+			cbox.IsDropDownOpen = true;
+		}
+
+		private void cbox_LostFocus(object sender, RoutedEventArgs e)
+		{
+			ComboBox cbox = e.Source as ComboBox;
+			cbox.Text = cbox.SelectedItem as string;
+			cbox_ShowAllItems(cbox);
+			cbox.IsDropDownOpen = false;
+		}
+
+		private void cbox_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			ComboBox cbox = e.Source as ComboBox;
+			if (cbox.Items.Count <= 0)
+				return;
+
+			if (!cbox.Items.Contains(cbox.Text))
+			{
+				string searchValue = cbox.Text.ToUpper();
+				bool isItemFounded = false;
+				bool isCoursosPosSetted = false;
+
+				for (int i = 0; i < cbox.Items.Count; i++)
+				{
+					ComboBoxItem cbItem = (ComboBoxItem)cbox.ItemContainerGenerator.ContainerFromIndex(i);
+					string item = cbox.Items[i] as string;
+
+					if (cbItem != null)
+					{
+						if (item.ToUpper().Contains(searchValue))
+						{
+							cbItem.Visibility = Visibility.Visible;
+							isItemFounded = true;
+
+							if (!isCoursosPosSetted)
+							{
+								isCoursosPosSetted = true;
+								int textLength = cbox.Text.Length;
+								cbox.SelectedIndex = i;
+								(e.OriginalSource as TextBox).SelectionStart = textLength;
+							}
+						}
+						else
+							cbItem.Visibility = Visibility.Collapsed;
+					}
+				}
+
+				if (isItemFounded)
+					cbox.IsDropDownOpen = true;
+				else
+					cbox.IsDropDownOpen = false;
+			}
+
+		}
+
+		#endregion
+
+
+		#endregion
+	}
 }
 
