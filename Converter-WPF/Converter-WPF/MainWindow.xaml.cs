@@ -320,6 +320,8 @@ namespace Converter_WPF
 			if (cbox.Items.Count <= 0)
 				return;
 
+			(e.OriginalSource as TextBox).CharacterCasing = CharacterCasing.Upper;
+
 			if (!cbox.Items.Contains(cbox.Text))
 			{
 				string searchValue = cbox.Text.ToUpper();

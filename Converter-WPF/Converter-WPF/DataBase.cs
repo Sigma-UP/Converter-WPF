@@ -14,7 +14,7 @@ namespace DATABASE
 		{
 			if (LoadDataBase(db_path, cb1, cb2))
 				return;
-			MessageBox.Show("DataBase load error. New DB with default currencies creating just now.", "Error", MessageBoxButton.OK);
+
 			string[] defCrncs = new string[] {
 			"USD", "EUR", "UAH", "AUD", "AZN",
 			"ALL", "DZD", "XCD", "AOA", "ARS",
@@ -66,9 +66,8 @@ namespace DATABASE
 			{
 				sw = new StreamWriter(path, false);
 			}
-			catch (Exception ex)
+			catch
 			{
-				MessageBox.Show("DataBase write error: " + ex.Message, "Error", MessageBoxButton.OK);
 				return;
 			}
 
@@ -89,7 +88,7 @@ namespace DATABASE
             {
 				reader = new StreamReader(path);
 			}
-            catch (Exception)
+            catch
             {
 				isDatabaseBroken = true;
 				return;
@@ -135,9 +134,8 @@ namespace DATABASE
 				{
 					sw = new StreamWriter(path, false);
 				}
-				catch (Exception ex)
+				catch
 				{
-					MessageBox.Show("DataBase rewrite error: " + ex.Message, "Error", MessageBoxButton.OK);
 					return;
 				}
 
