@@ -51,6 +51,8 @@
                         <TextBox Name="tbox_srcCrncAmount" Grid.Column="0" 
                                  FontSize="30" Text="100,00" FontWeight="Bold" 
                                  BorderThickness="0" FontFamily="Yu Gothic UI Semibold"/>
+                        <Border Visibility="Hidden" Name="border_srcCrncAmount" BorderThickness="1" BorderBrush="Red" Height="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"></Border>
+                        
                         <Border Grid.Column="1" Background="WhiteSmoke">
                         <ComboBox Name="cbox_srcCrnc" HorizontalAlignment="Stretch" 
                                       VerticalAlignment="Center" FontSize="16"
@@ -67,7 +69,10 @@
                         <TextBlock FontSize="14" VerticalAlignment="Center" Text="1 " FontFamily="Yu Gothic UI Semilight"/>
                         <TextBlock FontSize="14" VerticalAlignment="Center" Text="{Binding ElementName=cbox_srcCrnc,Path=SelectedItem}" FontFamily="Yu Gothic UI Semilight"/>
                         <TextBlock FontSize="14" VerticalAlignment="Center" Text=" = " FontFamily="Yu Gothic UI Semilight"/>
-                        <TextBox   FontSize="14" Name="tbox_srcRate" Text="1,00" VerticalAlignment="Center" Margin="0,0,3,0" BorderThickness="0" FontWeight="Bold" FontFamily="Yu Gothic UI Semibold"/>
+                        <Grid  Margin="0,0,3,0" VerticalAlignment="Center">
+                            <TextBox Name="tbox_srcRate" FontSize="14" Text="1,00"  BorderThickness="0" FontWeight="Bold" FontFamily="Yu Gothic UI Semibold"/>
+                            <Border Visibility="Hidden" Name="border_srcRate" BorderThickness="1" BorderBrush="Red" Height="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"></Border>
+                        </Grid>
                         <TextBlock FontSize="14" VerticalAlignment="Center" Text="{Binding ElementName=cbox_trgCrnc,Path=SelectedItem}" FontFamily="Yu Gothic UI Semilight"/>
                     </StackPanel>
                 </StackPanel>
@@ -85,6 +90,8 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBox Name="tbox_trgCrncAmount" Grid.Column="0" FontSize="30" Text="100,00" FontWeight="Bold" BorderThickness="0" IsReadOnly="False" FontFamily="Yu Gothic UI Semibold"/>
+                        <Border Visibility="Hidden" Name="border_trgCrncAmount" BorderThickness="1" BorderBrush="Red" Height="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"></Border>
+
                         <Border Grid.Column="1" Background="WhiteSmoke">
                             <ComboBox Name="cbox_trgCrnc" HorizontalAlignment="Stretch" 
                                       VerticalAlignment="Center" FontSize="16"
@@ -102,7 +109,10 @@
                         <TextBlock  FontSize="14" VerticalAlignment="Center" Text="1 " FontFamily="Yu Gothic UI Semilight"/>
                         <TextBlock  FontSize="14" VerticalAlignment="Center" Text="{Binding ElementName=cbox_trgCrnc,Path=SelectedItem}" FontFamily="Yu Gothic UI Semilight"/>
                         <TextBlock  FontSize="14" VerticalAlignment="Center" Text=" = " FontFamily="Yu Gothic UI Semilight"/>
-                        <TextBox    FontSize="14" Name="tbox_trgRate" Text="1,00" VerticalAlignment="Center" Margin="0,0,3,0" BorderThickness="0" FontWeight="Bold" FontFamily="Yu Gothic UI Semibold"/>
+                        <Grid Margin="0,0,3,0" VerticalAlignment="Center">
+                            <TextBox Name="tbox_trgRate" FontSize="14" Text="1,00" BorderThickness="0" FontWeight="Bold" FontFamily="Yu Gothic UI Semibold"/>
+                            <Border Visibility="Hidden" Name="border_trgRate" BorderThickness="1" BorderBrush="Red" Height="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"></Border>
+                        </Grid>
                         <TextBlock  FontSize="14" VerticalAlignment="Center" Text="{Binding ElementName=cbox_srcCrnc,Path=SelectedItem}" FontFamily="Yu Gothic UI Semilight"/>
                     </StackPanel>
                 </StackPanel>
@@ -122,10 +132,10 @@
                                     Background="LightGray" 
 									CharacterCasing="Upper" FontWeight="Bold" 
 									FontSize="17" Height="27"
-                                    Margin="5"
-                                    BorderThickness="0"
-									TextChanged="tbox_newCurrency_TextChanged"/>
-                            <Button	    x:Name="btn_CurrAdd" Grid.Column="1"
+                                    Margin="5" TextAlignment="Center"
+                                    BorderThickness="0"/>
+                            <Button	    
+                                    x:Name="btn_CurrAdd" Grid.Column="1"
                                     Margin="5"
 									IsEnabled="False"  Click="btn_CurrAdd_Click" 
                                     Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"

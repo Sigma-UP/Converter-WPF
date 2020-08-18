@@ -1,16 +1,16 @@
 ﻿using System;
 
-namespace String_Advanced
+namespace StringExtension
 {
-	public static class StringOPS
+	public static class StringExtension
 	{
-		public static bool isNumber(string str)
+		public static bool isNumber(this string str)
 		{
 			double varriable;
 			return double.TryParse(str, out varriable);
 		}
 
-		public static bool isLetter(string str)
+		public static bool isLetter(this string str)
 		{
 			for (int i = 0; i < str.Length; i++)
 				if (!Char.IsLetter(str[i]))
@@ -19,7 +19,7 @@ namespace String_Advanced
 			return true;
 		}
 
-		public static bool isUpper(string str)
+		public static bool isUpper(this string str)
 		{
 			for (int i = 0; i < str.Length; i++)
 				if (!Char.IsUpper(str[i]))

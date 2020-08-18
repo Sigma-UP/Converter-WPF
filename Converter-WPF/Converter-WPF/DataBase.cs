@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Collections.Generic;
 
-using String_Advanced;
+using StringExtension;
 
 namespace DATABASE
 {
@@ -14,7 +14,7 @@ namespace DATABASE
 		{
 			if (LoadDataBase(db_path, cb1, cb2))
 				return;
-			MessageBox.Show("DataBase load error. New DB with default currencies creating just now.", "Error", MessageBoxButton.OK);
+
 			string[] defCrncs = new string[] {
 			"USD", "EUR", "UAH", "AUD", "AZN",
 			"ALL", "DZD", "XCD", "AOA", "ARS",
@@ -66,9 +66,8 @@ namespace DATABASE
 			{
 				sw = new StreamWriter(path, false);
 			}
-			catch (Exception ex)
+			catch
 			{
-				MessageBox.Show("DataBase write error: " + ex.Message, "Error", MessageBoxButton.OK);
 				return;
 			}
 
@@ -89,7 +88,7 @@ namespace DATABASE
             {
 				reader = new StreamReader(path);
 			}
-            catch (Exception)
+            catch
             {
 				isDatabaseBroken = true;
 				return;
@@ -108,7 +107,7 @@ namespace DATABASE
 					bool isFormatBroken = false;
 					bool isRepeat = false;
 
-					if (originalData[i].Length == 3 && StringOPS.isLetter(originalData[i]) && StringOPS.isUpper(originalData[i]))
+					if (originalData[i].Length == 3 && originalData[i].isLetter() && originalData[i].isUpper())
 					{
 						foreach (string existCurrency in editData)
 							if (originalData[i] == existCurrency)
@@ -135,9 +134,8 @@ namespace DATABASE
 				{
 					sw = new StreamWriter(path, false);
 				}
-				catch (Exception ex)
+				catch
 				{
-					MessageBox.Show("DataBase rewrite error: " + ex.Message, "Error", MessageBoxButton.OK);
 					return;
 				}
 
