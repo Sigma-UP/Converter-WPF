@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -19,6 +20,8 @@ namespace Converter_WPF
 		private bool isNormalConvMode = true;
 
 		private string DB_path = "DB.txt";
+
+		private List<string> currencies = new List<string>();
 
 
 		public MainWindow()
@@ -50,12 +53,19 @@ namespace Converter_WPF
 			cbox_srcCrnc.LostFocus += cbox_LostFocus;
 			cbox_trgCrnc.LostFocus += cbox_LostFocus;
 
-			TXT_DB.DB_Load(DB_path, cbox_srcCrnc, cbox_trgCrnc);
-
+			TXT_DB.DB_Load(DB_path, AddNewCrnc);
+			
 			cbox_srcCrnc.SelectedIndex = 0;
 			cbox_trgCrnc.SelectedIndex = 1;
 		}
 
+
+		private void AddNewCrnc(string currencyCode)
+        {
+			cbox_srcCrnc.Items.Add(currencyCode);
+			cbox_trgCrnc.Items.Add(currencyCode);
+			currencies.Add(currencyCode);
+        }
 
 		private bool ValidateTextBoxInput()
 		{
@@ -150,7 +160,7 @@ namespace Converter_WPF
 			{
 				cbox_trgCrnc.Items.Add(tbox_NewCurrency.Text);
 				cbox_srcCrnc.Items.Add(tbox_NewCurrency.Text);
-				TXT_DB.SaveDataBase(DB_path, cbox_trgCrnc);
+				TXT_DB.SaveDataBase(DB_path, currencies);
 				tbox_NewCurrency.Background = Brushes.LightGreen;
 			}
 			else
@@ -253,28 +263,22 @@ namespace Converter_WPF
 
 		#region Currency ComboBox event handlers
 
-		private string srcDeletedCrnc;
-		private int srcDeletedIndex;
 		private void cbox_srcCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (trgDeletedCrnc != null)
-				cbox_trgCrnc.Items.Insert(trgDeletedIndex, trgDeletedCrnc);
+			for (int i = 0; i < currencies.Count; i++)
+				if (cbox_trgCrnc.Items[i] as string != currencies[i])
+					cbox_trgCrnc.Items.Insert(i, currencies[i--]);
 
-			trgDeletedCrnc = cbox_srcCrnc.SelectedItem as string;
-			trgDeletedIndex = cbox_srcCrnc.SelectedIndex;
-			cbox_trgCrnc.Items.Remove(trgDeletedCrnc);
+			cbox_trgCrnc.Items.Remove(cbox_srcCrnc.SelectedItem);
 		}
 
-		private string trgDeletedCrnc;
-		private int trgDeletedIndex;
 		private void cbox_trgCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (srcDeletedCrnc != null)
-				cbox_srcCrnc.Items.Insert(srcDeletedIndex, srcDeletedCrnc);
+			for (int i = 0; i < currencies.Count; i++)
+				if (cbox_srcCrnc.Items[i] as string != currencies[i])
+					cbox_srcCrnc.Items.Insert(i, currencies[i--]);
 
-			srcDeletedCrnc = cbox_trgCrnc.SelectedItem as string;
-			srcDeletedIndex = cbox_trgCrnc.SelectedIndex;
-			cbox_srcCrnc.Items.Remove(srcDeletedCrnc);
+			cbox_srcCrnc.Items.Remove(cbox_trgCrnc.SelectedItem);
 		}
 
 
@@ -326,7 +330,7 @@ namespace Converter_WPF
 			{
 				string searchValue = cbox.Text.ToUpper();
 				bool isItemFounded = false;
-				bool isCoursosPosSetted = false;
+				bool isCursorPosSetted = false;
 
 				for (int i = 0; i < cbox.Items.Count; i++)
 				{
@@ -340,12 +344,16 @@ namespace Converter_WPF
 							cbItem.Visibility = Visibility.Visible;
 							isItemFounded = true;
 
-							if (!isCoursosPosSetted)
+							if (!isCursorPosSetted)
 							{
-								isCoursosPosSetted = true;
-								int textLength = cbox.Text.Length;
+								TextBox tboxBase = e.OriginalSource as TextBox;
+								string text = tboxBase.Text;
+
 								cbox.SelectedIndex = i;
-								(e.OriginalSource as TextBox).SelectionStart = textLength;
+								cbox.Text = text;
+								tboxBase.SelectionStart = cbox.Text.Length;
+
+								isCursorPosSetted = true;
 							}
 						}
 						else
