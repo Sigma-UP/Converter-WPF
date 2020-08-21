@@ -146,13 +146,16 @@ namespace Converter_WPF
 
 		private void btn_CurrAdd_Click(object sender, RoutedEventArgs e)
 		{
+			btn_CurrAdd.IsEnabled = false;
 			string addStatus = "ADDED";
 			bool isAddAvailable = true;
+			Border border = new Border();
 
 			foreach (string existedCurrency in cbox_srcCrnc.Items)
 				if (tbox_NewCurrency.Text == existedCurrency) 
 				{
 					isAddAvailable = false;
+					border.Visibility = Visibility.Visible;
 					addStatus = "ERROR";
 					break;
 				}
@@ -161,10 +164,9 @@ namespace Converter_WPF
 				cbox_trgCrnc.Items.Add(tbox_NewCurrency.Text);
 				cbox_srcCrnc.Items.Add(tbox_NewCurrency.Text);
 				TXT_DB.SaveDataBase(DB_path, currencies);
-				tbox_NewCurrency.Background = Brushes.LightGreen;
 			}
 			else
-				tbox_NewCurrency.Background = (Brush)new BrushConverter().ConvertFromString("#FFFF9191");
+				border.Visibility = Visibility.Visible;
 
 			tbox_NewCurrency.TextChanged -= tbox_newCurrency_TextChanged;
 			tbox_NewCurrency.Text = addStatus;
@@ -174,7 +176,6 @@ namespace Converter_WPF
 			dispatcherTimer.Tick += delegate 
 			{ 
 				tbox_NewCurrency.TextChanged += tbox_newCurrency_TextChanged;
-				tbox_NewCurrency.Background = Brushes.LightGray; 
 				tbox_NewCurrency.Text = "";
 				dispatcherTimer.Stop(); 
 			};
@@ -229,17 +230,16 @@ namespace Converter_WPF
 		private void tbox_newCurrency_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			bool isValid = false;
-			btn_CurrAdd.IsEnabled = false;
 
 			if ((tbox_NewCurrency.Text.isLetter() && tbox_NewCurrency.Text.Length == 3) || tbox_NewCurrency.Text.Length == 0)
 			{
-				tbox_NewCurrency.Background = Brushes.LightGray;
+				border_newCrnc.Visibility = Visibility.Hidden;
 				if (tbox_NewCurrency.Text.Length == 3)
 					isValid = true;
 			}
 			else
 			{
-				tbox_NewCurrency.Background = (Brush)new BrushConverter().ConvertFrom("#FFFFAFAF");
+				border_newCrnc.Visibility = Visibility.Visible;
 				isValid = false;
 			}
 
