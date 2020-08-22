@@ -67,62 +67,33 @@ namespace Converter_WPF
 			currencies.Add(currencyCode);
         }
 
-		private bool ValidateTextBoxInput()
+		private void ValidateTextBoxInput()
 		{
-			bool isValid = true;
-		
+			isConvAvaliable = true;
+
 			TextBox[] tboxes = new TextBox[] { tbox_srcCrncAmount, tbox_trgCrncAmount, tbox_srcRate, tbox_trgRate };
 			Border[] borders = new Border[] { border_srcCrncAmount, border_trgCrncAmount, border_srcRate, border_trgRate };
-			
+			TextBox tbox_iHave = isNormalConvMode ? tbox_srcCrncAmount : tbox_trgCrncAmount;
+
 			for (int i = 0; i < tboxes.Length; i++)
-				switch(i)
-                {
-					case 0:
-                        {
-							if (tboxes[i].Text.isNumber() && double.Parse(tboxes[i].Text) > 0)
-								borders[i].Visibility = Visibility.Hidden;
-							else
-							{
-								borders[i].Visibility = Visibility.Visible;
+			{
+				if (tboxes[i].Text.isNumber() && double.Parse(tboxes[i].Text) > 0)
+					borders[i].Visibility = Visibility.Hidden;
+				else
+				{
+					borders[i].Visibility = Visibility.Visible;
 
-								if (isNormalConvMode)
-									isValid = false;
-								else
-									isValid = true;
-							}
-							break;
-						}
-
-					case 1:
-                        {
-							if (tboxes[i].Text.isNumber() && double.Parse(tboxes[i].Text) > 0)
-								borders[i].Visibility = Visibility.Hidden;
-							else
-							{
-								borders[i].Visibility = Visibility.Visible;
-
-								if (isNormalConvMode)
-									isValid = true;
-								else
-									isValid = false;
-							}
-							break;
-						}
-
-					default:
-                        {
-							if (tboxes[i].Text.isNumber() && double.Parse(tboxes[i].Text) > 0)
-								borders[i].Visibility = Visibility.Hidden;
-							else
-							{
-								borders[i].Visibility = Visibility.Visible;
-								isValid = false;
-							}
-							break;
-						}
+					if (i == 0 || i == 1)
+					{
+						if (!tbox_iHave.Text.isNumber())
+							isConvAvaliable = false;
+					}
+					else
+						isConvAvaliable = false;
 				}
-		
-			return isConvAvaliable = isValid;
+
+			}
+
 		}
 
 		private void Convert()
