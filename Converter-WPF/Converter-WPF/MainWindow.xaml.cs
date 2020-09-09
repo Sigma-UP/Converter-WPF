@@ -1,15 +1,18 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-
 using DATABASE;
 using StringExtension;
+using Currency_Converter;
 
 namespace Converter_WPF
 {
 	public partial class MainWindow : Window
 	{
+		private Converter converter;
+
 		private double srcAmount;
 		private double trgAmount;
 		private double srcRate;
@@ -20,10 +23,14 @@ namespace Converter_WPF
 
 		private string DB_path = "DB.txt";
 
+		private List<string> currencies = new List<string>();
+
 
 		public MainWindow()
 		{
 			InitializeComponent();
+
+			converter = new Converter("e31ff0cc7dbafe2d6e05");
 
 			srcAmount = double.Parse(tbox_srcCrncAmount.Text);
 			trgAmount = double.Parse(tbox_trgCrncAmount.Text);
@@ -50,69 +57,47 @@ namespace Converter_WPF
 			cbox_srcCrnc.LostFocus += cbox_LostFocus;
 			cbox_trgCrnc.LostFocus += cbox_LostFocus;
 
-			TXT_DB.DB_Load(DB_path, cbox_srcCrnc, cbox_trgCrnc);
-
+			TXT_DB.DB_Load(DB_path, AddNewCrnc);
+			
 			cbox_srcCrnc.SelectedIndex = 0;
 			cbox_trgCrnc.SelectedIndex = 1;
 		}
 
 
-		private bool ValidateTextBoxInput()
+		private void AddNewCrnc(string currencyCode)
+        {
+			cbox_srcCrnc.Items.Add(currencyCode);
+			cbox_trgCrnc.Items.Add(currencyCode);
+			currencies.Add(currencyCode);
+        }
+
+		private void ValidateTextBoxInput()
 		{
-			bool isValid = true;
-		
+			isConvAvaliable = true;
+
 			TextBox[] tboxes = new TextBox[] { tbox_srcCrncAmount, tbox_trgCrncAmount, tbox_srcRate, tbox_trgRate };
 			Border[] borders = new Border[] { border_srcCrncAmount, border_trgCrncAmount, border_srcRate, border_trgRate };
-			
+			TextBox tbox_iHave = isNormalConvMode ? tbox_srcCrncAmount : tbox_trgCrncAmount;
+
 			for (int i = 0; i < tboxes.Length; i++)
-				switch(i)
-                {
-					case 0:
-                        {
-							if (tboxes[i].Text.isNumber() && double.Parse(tboxes[i].Text) > 0)
-								borders[i].Visibility = Visibility.Hidden;
-							else
-							{
-								borders[i].Visibility = Visibility.Visible;
+			{
+				if (tboxes[i].Text.isNumber() && double.Parse(tboxes[i].Text) > 0)
+					borders[i].Visibility = Visibility.Hidden;
+				else
+				{
+					borders[i].Visibility = Visibility.Visible;
 
-								if (isNormalConvMode)
-									isValid = false;
-								else
-									isValid = true;
-							}
-							break;
-						}
-
-					case 1:
-                        {
-							if (tboxes[i].Text.isNumber() && double.Parse(tboxes[i].Text) > 0)
-								borders[i].Visibility = Visibility.Hidden;
-							else
-							{
-								borders[i].Visibility = Visibility.Visible;
-
-								if (isNormalConvMode)
-									isValid = true;
-								else
-									isValid = false;
-							}
-							break;
-						}
-
-					default:
-                        {
-							if (tboxes[i].Text.isNumber() && double.Parse(tboxes[i].Text) > 0)
-								borders[i].Visibility = Visibility.Hidden;
-							else
-							{
-								borders[i].Visibility = Visibility.Visible;
-								isValid = false;
-							}
-							break;
-						}
+					if (i == 0 || i == 1)
+					{
+						if (!tbox_iHave.Text.isNumber())
+							isConvAvaliable = false;
+					}
+					else
+						isConvAvaliable = false;
 				}
-		
-			return isConvAvaliable = isValid;
+
+			}
+
 		}
 
 		private void Convert()
@@ -136,13 +121,16 @@ namespace Converter_WPF
 
 		private void btn_CurrAdd_Click(object sender, RoutedEventArgs e)
 		{
+			btn_CurrAdd.IsEnabled = false;
 			string addStatus = "ADDED";
 			bool isAddAvailable = true;
+			Border border = new Border();
 
 			foreach (string existedCurrency in cbox_srcCrnc.Items)
 				if (tbox_NewCurrency.Text == existedCurrency) 
 				{
 					isAddAvailable = false;
+					border.Visibility = Visibility.Visible;
 					addStatus = "ERROR";
 					break;
 				}
@@ -150,11 +138,10 @@ namespace Converter_WPF
 			{
 				cbox_trgCrnc.Items.Add(tbox_NewCurrency.Text);
 				cbox_srcCrnc.Items.Add(tbox_NewCurrency.Text);
-				TXT_DB.SaveDataBase(DB_path, cbox_trgCrnc);
-				tbox_NewCurrency.Background = Brushes.LightGreen;
+				TXT_DB.SaveDataBase(DB_path, currencies);
 			}
 			else
-				tbox_NewCurrency.Background = (Brush)new BrushConverter().ConvertFromString("#FFFF9191");
+				border.Visibility = Visibility.Visible;
 
 			tbox_NewCurrency.TextChanged -= tbox_newCurrency_TextChanged;
 			tbox_NewCurrency.Text = addStatus;
@@ -164,7 +151,6 @@ namespace Converter_WPF
 			dispatcherTimer.Tick += delegate 
 			{ 
 				tbox_NewCurrency.TextChanged += tbox_newCurrency_TextChanged;
-				tbox_NewCurrency.Background = Brushes.LightGray; 
 				tbox_NewCurrency.Text = "";
 				dispatcherTimer.Stop(); 
 			};
@@ -219,17 +205,16 @@ namespace Converter_WPF
 		private void tbox_newCurrency_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			bool isValid = false;
-			btn_CurrAdd.IsEnabled = false;
 
 			if ((tbox_NewCurrency.Text.isLetter() && tbox_NewCurrency.Text.Length == 3) || tbox_NewCurrency.Text.Length == 0)
 			{
-				tbox_NewCurrency.Background = Brushes.LightGray;
+				border_newCrnc.Visibility = Visibility.Hidden;
 				if (tbox_NewCurrency.Text.Length == 3)
 					isValid = true;
 			}
 			else
 			{
-				tbox_NewCurrency.Background = (Brush)new BrushConverter().ConvertFrom("#FFFFAFAF");
+				border_newCrnc.Visibility = Visibility.Visible;
 				isValid = false;
 			}
 
@@ -253,28 +238,22 @@ namespace Converter_WPF
 
 		#region Currency ComboBox event handlers
 
-		private string srcDeletedCrnc;
-		private int srcDeletedIndex;
 		private void cbox_srcCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (trgDeletedCrnc != null)
-				cbox_trgCrnc.Items.Insert(trgDeletedIndex, trgDeletedCrnc);
+			for (int i = 0; i < currencies.Count; i++)
+				if (cbox_trgCrnc.Items[i] as string != currencies[i])
+					cbox_trgCrnc.Items.Insert(i, currencies[i--]);
 
-			trgDeletedCrnc = cbox_srcCrnc.SelectedItem as string;
-			trgDeletedIndex = cbox_srcCrnc.SelectedIndex;
-			cbox_trgCrnc.Items.Remove(trgDeletedCrnc);
+			cbox_trgCrnc.Items.Remove(cbox_srcCrnc.SelectedItem);
 		}
 
-		private string trgDeletedCrnc;
-		private int trgDeletedIndex;
 		private void cbox_trgCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (srcDeletedCrnc != null)
-				cbox_srcCrnc.Items.Insert(srcDeletedIndex, srcDeletedCrnc);
+			for (int i = 0; i < currencies.Count; i++)
+				if (cbox_srcCrnc.Items[i] as string != currencies[i])
+					cbox_srcCrnc.Items.Insert(i, currencies[i--]);
 
-			srcDeletedCrnc = cbox_trgCrnc.SelectedItem as string;
-			srcDeletedIndex = cbox_trgCrnc.SelectedIndex;
-			cbox_srcCrnc.Items.Remove(srcDeletedCrnc);
+			cbox_srcCrnc.Items.Remove(cbox_trgCrnc.SelectedItem);
 		}
 
 
@@ -326,7 +305,7 @@ namespace Converter_WPF
 			{
 				string searchValue = cbox.Text.ToUpper();
 				bool isItemFounded = false;
-				bool isCoursosPosSetted = false;
+				bool isCursorPosSetted = false;
 
 				for (int i = 0; i < cbox.Items.Count; i++)
 				{
@@ -340,12 +319,16 @@ namespace Converter_WPF
 							cbItem.Visibility = Visibility.Visible;
 							isItemFounded = true;
 
-							if (!isCoursosPosSetted)
+							if (!isCursorPosSetted)
 							{
-								isCoursosPosSetted = true;
-								int textLength = cbox.Text.Length;
+								TextBox tboxBase = e.OriginalSource as TextBox;
+								string text = tboxBase.Text;
+
 								cbox.SelectedIndex = i;
-								(e.OriginalSource as TextBox).SelectionStart = textLength;
+								cbox.Text = text;
+								tboxBase.SelectionStart = cbox.Text.Length;
+
+								isCursorPosSetted = true;
 							}
 						}
 						else
@@ -361,10 +344,10 @@ namespace Converter_WPF
 
 		}
 
-		#endregion
+        #endregion
 
+        #endregion
 
-		#endregion
 	}
 }
 

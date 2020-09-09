@@ -1,7 +1,4 @@
-using System;
 using System.IO;
-using System.Windows;
-using System.Windows.Controls;
 using System.Collections.Generic;
 
 using StringExtension;
@@ -10,28 +7,30 @@ namespace DATABASE
 {
 	public class TXT_DB
 	{
-		public static void DB_Load(string db_path, ComboBox cb1, ComboBox cb2)
+		public delegate void AddNewCrncMethod(string currencyCode);
+
+
+		public static void DB_Load(string db_path, AddNewCrncMethod AddCrnc)
 		{
-			if (LoadDataBase(db_path, cb1, cb2))
+			if (LoadDataBase(db_path, AddCrnc))
 				return;
 
-			string[] defCrncs = new string[] {
-			"USD", "EUR", "UAH", "AUD", "AZN",
-			"ALL", "DZD", "XCD", "AOA", "ARS",
-			"AWG", "AFN", "BSD", "BDT", "BBD",
-			"BHD", "BYN", "XOF", "BOB", "BRL",
-			"BIF", "BTN", "VUV", "GBP", "VES",
-			"XAF", "VND", "GYD", "GHS", "GMD"
+			string[] defCrncs = new string[] 
+			{
+				"USD", "EUR", "UAH", "AUD", "AZN",
+				"ALL", "DZD", "XCD", "AOA", "ARS",
+				"AWG", "AFN", "BSD", "BDT", "BBD",
+				"BHD", "BYN", "XOF", "BOB", "BRL",
+				"BIF", "BTN", "VUV", "GBP", "VES",
+				"XAF", "VND", "GYD", "GHS", "GMD"
 			};
 			foreach (string crnc in defCrncs)
-			{
-				cb1.Items.Add(crnc);
-				cb2.Items.Add(crnc);
-			}
-			SaveDataBase(db_path, cb1);
+				AddCrnc(crnc);
+
+			SaveDataBase(db_path, new List<string>(defCrncs));
 		}
 
-		private static bool LoadDataBase(string path, ComboBox comboBox1, ComboBox comboBox2)
+		private static bool LoadDataBase(string path, AddNewCrncMethod AddCrnc)
 		{
 			DB_Validate(path);
 			StreamReader sr;
@@ -48,17 +47,15 @@ namespace DATABASE
 			string line;
 			while ((line = sr.ReadLine()) != null)
 				if (line.Length == 3)
-				{
-					comboBox1.Items.Add(line);
-					comboBox2.Items.Add(line);
-				}
+					AddCrnc(line);
+
 			sr.Close();
 
 
 			return true;
 		}
 
-		public static void SaveDataBase(string path, ComboBox cb)
+		public static void SaveDataBase(string path, List<string> currencies)
 		{
 			StreamWriter sw;
 
@@ -71,8 +68,8 @@ namespace DATABASE
 				return;
 			}
 
-			for (int i = 0; i < cb.Items.Count; i++)
-				sw.WriteLine(cb.Items[i]);
+			for (int i = 0; i < currencies.Count; i++)
+				sw.WriteLine(currencies[i]);
 			sw.Close();
 		}
 

@@ -15,17 +15,31 @@
         </Grid.RowDefinitions>
 
         <!--Header-->
-        <Grid x:Name="grid_header" Grid.Row="0" Background="Gray" MouseDown="grid_header_MouseDown">
+        <Grid 
+            x:Name="grid_header" Grid.Row="0" 
+            Background="Gray" MouseDown="grid_header_MouseDown">
             <!--Window manipulation | Right corner -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="7, 0">
-                <Button x:Name="btn_close" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Background="{x:Null}" BorderBrush="{x:Null}" Width="30" Height="30" VerticalAlignment="Bottom" Click="btn_close_Click">
-                    <materialDesign:PackIcon Kind="Power" Width="25" Height="25"/>
+            <StackPanel 
+                Orientation="Horizontal" HorizontalAlignment="Right" 
+                VerticalAlignment="Center" Margin="7, 0">
+                <Button 
+                    x:Name="btn_close" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
+                    Background="{x:Null}" BorderBrush="{x:Null}"
+                    Width="30" Height="30" 
+                    VerticalAlignment="Bottom" Click="btn_close_Click">
+                    <materialDesign:PackIcon 
+                        Kind="Power" Width="25" Height="25"/>
                 </Button>
             </StackPanel>
             <!--Window name | Left corner-->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,3,0,0">
-                <materialDesign:PackIcon Kind="Calculator" Foreground="White"/>
-                <TextBlock Margin="5,0,0,0" Text="Converter" Foreground="LightGray" />
+            <StackPanel 
+                Orientation="Horizontal" HorizontalAlignment="Left" 
+                VerticalAlignment="Center" Margin="10,3,0,0">
+                <materialDesign:PackIcon 
+                    Kind="Calculator" Foreground="White"/>
+                <TextBlock 
+                    Margin="5,0,0,0" Text="Converter" 
+                    Foreground="WhiteSmoke" />
             </StackPanel>
         </Grid>
 
@@ -52,9 +66,9 @@
                                  FontSize="30" Text="100,00" FontWeight="Bold" 
                                  BorderThickness="0" FontFamily="Yu Gothic UI Semibold"/>
                         <Border Visibility="Hidden" Name="border_srcCrncAmount" BorderThickness="1" BorderBrush="Red" Height="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"></Border>
-                        
+
                         <Border Grid.Column="1" Background="WhiteSmoke">
-                        <ComboBox Name="cbox_srcCrnc" HorizontalAlignment="Stretch" 
+                            <ComboBox Name="cbox_srcCrnc" HorizontalAlignment="Stretch" 
                                       VerticalAlignment="Center" FontSize="16"
                                       BorderThickness="0" Background="#FFF0F0F0" 
                                       FontFamily="Yu Gothic UI Semilight"
@@ -62,8 +76,8 @@
                                       IsEditable="True" 
                                       IsTextSearchEnabled="False" 
                                       TextBoxBase.TextChanged="cbox_TextChanged"/>
-                         </Border>
-        </Grid>
+                        </Border>
+                    </Grid>
 
                     <StackPanel Height="auto" Orientation="Horizontal" Margin="20 2 20 0" VerticalAlignment="Bottom">
                         <TextBlock FontSize="14" VerticalAlignment="Center" Text="1 " FontFamily="Yu Gothic UI Semilight"/>
@@ -79,9 +93,15 @@
             </Border>
 
             <!-- Convert to -->
-            <Border Grid.Column="2" BorderThickness="1" BorderBrush="LightGray" Background="LightGray" CornerRadius="10" Margin="10,10,10,10">
+            <Border 
+                Grid.Column="2" BorderThickness="1" 
+                BorderBrush="LightGray" Background="LightGray" 
+                CornerRadius="10" Margin="10,10,10,10">
                 <StackPanel>
-                    <TextBlock Margin ="20 15 10 0" Text="I will get" FontSize="20" FontFamily="Yu Gothic UI Semilight" TextDecorations="{x:Null}"/>
+                    <TextBlock 
+                        Margin ="20 15 10 0" Text="I will get" 
+                        FontSize="20" FontFamily="Yu Gothic UI Semilight" 
+                        TextDecorations="{x:Null}"/>
 
                     <Grid Margin="15 5 20 0">
                         <Grid.ColumnDefinitions>
@@ -89,8 +109,15 @@
                             <ColumnDefinition Width="41*"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBox Name="tbox_trgCrncAmount" Grid.Column="0" FontSize="30" Text="100,00" FontWeight="Bold" BorderThickness="0" IsReadOnly="False" FontFamily="Yu Gothic UI Semibold"/>
-                        <Border Visibility="Hidden" Name="border_trgCrncAmount" BorderThickness="1" BorderBrush="Red" Height="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"></Border>
+                        <TextBox 
+                            Name="tbox_trgCrncAmount" Grid.Column="0" 
+                            FontSize="30" Text="100,00" 
+                            FontWeight="Bold" BorderThickness="0" 
+                            IsReadOnly="False" FontFamily="Yu Gothic UI Semibold"/>
+                        <Border Visibility="Hidden" Name="border_trgCrncAmount"
+                                BorderThickness="1" BorderBrush="Red" 
+                                Height="2" VerticalAlignment="Bottom"
+                                HorizontalAlignment="Stretch"/>
 
                         <Border Grid.Column="1" Background="WhiteSmoke">
                             <ComboBox Name="cbox_trgCrnc" HorizontalAlignment="Stretch" 
@@ -121,19 +148,26 @@
             <!-- Additional options -->
             <Border Grid.Column="3" Margin="10,10,10,10">
                 <StackPanel VerticalAlignment="Center">
-                    <Border CornerRadius="10" BorderThickness="1" BorderBrush="LightGray" Background="LightGray">
+                    <Border 
+                        CornerRadius="10" BorderThickness="1" 
+                        BorderBrush="LightGray" Background="LightGray">
                         <Grid x:Name="grid_NewAdd">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox    
+
+                            <TextBox
                                     x:Name="tbox_NewCurrency" Grid.Column="0" 
                                     Background="LightGray" 
 									CharacterCasing="Upper" FontWeight="Bold" 
 									FontSize="17" Height="27"
                                     Margin="5" TextAlignment="Center"
                                     BorderThickness="0"/>
+                            <Border Grid.Column="0" Margin="5" 
+                                    Visibility="Hidden" Name="border_newCrnc" 
+                                    BorderThickness="1" BorderBrush="Red" Height="2" 
+                                    VerticalAlignment="Bottom" HorizontalAlignment="Stretch"></Border>
                             <Button	    
                                     x:Name="btn_CurrAdd" Grid.Column="1"
                                     Margin="5"
@@ -147,6 +181,7 @@
                     </Border>
                 </StackPanel>
             </Border>
+            
         </Grid>
     </Grid>
 </Window>
