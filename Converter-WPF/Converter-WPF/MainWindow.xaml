@@ -66,9 +66,9 @@
                                  FontSize="30" Text="100,00" FontWeight="Bold" 
                                  BorderThickness="0" FontFamily="Yu Gothic UI Semibold"/>
                         <Border Visibility="Hidden" Name="border_srcCrncAmount" BorderThickness="1" BorderBrush="Red" Height="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"></Border>
-                        
+
                         <Border Grid.Column="1" Background="WhiteSmoke">
-                        <ComboBox Name="cbox_srcCrnc" HorizontalAlignment="Stretch" 
+                            <ComboBox Name="cbox_srcCrnc" HorizontalAlignment="Stretch" 
                                       VerticalAlignment="Center" FontSize="16"
                                       BorderThickness="0" Background="#FFF0F0F0" 
                                       FontFamily="Yu Gothic UI Semilight"
@@ -76,8 +76,8 @@
                                       IsEditable="True" 
                                       IsTextSearchEnabled="False" 
                                       TextBoxBase.TextChanged="cbox_TextChanged"/>
-                         </Border>
-        </Grid>
+                        </Border>
+                    </Grid>
 
                     <StackPanel Height="auto" Orientation="Horizontal" Margin="20 2 20 0" VerticalAlignment="Bottom">
                         <TextBlock FontSize="14" VerticalAlignment="Center" Text="1 " FontFamily="Yu Gothic UI Semilight"/>
@@ -181,6 +181,7 @@
                     </Border>
                 </StackPanel>
             </Border>
+            
         </Grid>
     </Grid>
 </Window>

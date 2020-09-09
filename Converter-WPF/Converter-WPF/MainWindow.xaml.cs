@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-
 using DATABASE;
 using StringExtension;
+using Currency_Converter;
 
 namespace Converter_WPF
 {
 	public partial class MainWindow : Window
 	{
+		private Converter converter;
+
 		private double srcAmount;
 		private double trgAmount;
 		private double srcRate;
@@ -27,6 +29,8 @@ namespace Converter_WPF
 		public MainWindow()
 		{
 			InitializeComponent();
+
+			converter = new Converter("e31ff0cc7dbafe2d6e05");
 
 			srcAmount = double.Parse(tbox_srcCrncAmount.Text);
 			trgAmount = double.Parse(tbox_trgCrncAmount.Text);
@@ -340,10 +344,10 @@ namespace Converter_WPF
 
 		}
 
-		#endregion
+        #endregion
 
+        #endregion
 
-		#endregion
 	}
 }
 
