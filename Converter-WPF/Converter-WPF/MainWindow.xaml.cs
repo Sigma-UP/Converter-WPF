@@ -1,17 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using DATABASE;
 using StringExtension;
-using Currency_Converter;
 
 namespace Converter_WPF
 {
 	public partial class MainWindow : Window
 	{
-		private Converter converter;
+		private CurrconvAPI currconvAPI;
 
 		private double srcAmount;
 		private double trgAmount;
@@ -30,7 +34,7 @@ namespace Converter_WPF
 		{
 			InitializeComponent();
 
-			converter = new Converter("e31ff0cc7dbafe2d6e05");
+			currconvAPI = new CurrconvAPI("5f1965af1bceb7361177");
 
 			srcAmount = double.Parse(tbox_srcCrncAmount.Text);
 			trgAmount = double.Parse(tbox_trgCrncAmount.Text);
@@ -60,6 +64,31 @@ namespace Converter_WPF
 			TXT_DB.DB_Load(DB_path, AddNewCrnc);
 			
 			cbox_srcCrnc.SelectedIndex = 0;
+
+			SelectionChangedEventHandler currencyRateSetter = delegate 
+			{
+				string srcCrnc = cbox_srcCrnc.SelectedItem as string;
+				string trgCrnc = cbox_trgCrnc.SelectedItem as string;
+				BackgroundWorker worker = new BackgroundWorker();
+
+				tbox_srcRate.Text = "...";
+				tbox_trgRate.Text = "...";
+
+				worker.DoWork += (sender, args) =>
+				{
+					args.Result = currconvAPI.GetExchangeRate(srcCrnc, trgCrnc);
+				};
+				
+				worker.RunWorkerCompleted += (sender, args) =>
+				{
+					tbox_srcRate.Text = string.Format("{0:0.00##}", args.Result);
+				};
+
+				worker.RunWorkerAsync();
+			};
+			cbox_srcCrnc.SelectionChanged += currencyRateSetter;
+			cbox_trgCrnc.SelectionChanged += currencyRateSetter;
+
 			cbox_trgCrnc.SelectedIndex = 1;
 		}
 
@@ -240,7 +269,10 @@ namespace Converter_WPF
 
 		private void cbox_srcCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			for (int i = 0; i < currencies.Count; i++)
+			if (cbox_trgCrnc.Items[cbox_trgCrnc.Items.Count - 1] as string == currencies.Last())
+				cbox_trgCrnc.Items.Add(currencies.Last());
+			else
+				for (int i = 0; i < currencies.Count; i++)
 				if (cbox_trgCrnc.Items[i] as string != currencies[i])
 					cbox_trgCrnc.Items.Insert(i, currencies[i--]);
 
@@ -249,9 +281,12 @@ namespace Converter_WPF
 
 		private void cbox_trgCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			for (int i = 0; i < currencies.Count; i++)
-				if (cbox_srcCrnc.Items[i] as string != currencies[i])
-					cbox_srcCrnc.Items.Insert(i, currencies[i--]);
+			if (cbox_srcCrnc.Items[cbox_srcCrnc.Items.Count - 1] as string == currencies.Last())
+				cbox_srcCrnc.Items.Add(currencies.Last());
+			else
+				for (int i = 0; i < currencies.Count; i++)
+					if (cbox_srcCrnc.Items[i] as string != currencies[i])
+						cbox_srcCrnc.Items.Insert(i, currencies[i--]);
 
 			cbox_srcCrnc.Items.Remove(cbox_trgCrnc.SelectedItem);
 		}
