@@ -33,7 +33,7 @@ namespace Converter_WPF
 		public MainWindow()
 		{
 			InitializeComponent();
-
+			
 			currconvAPI = new CurrconvAPI("5f1965af1bceb7361177");
 
 			srcAmount = double.Parse(tbox_srcCrncAmount.Text);
@@ -269,7 +269,7 @@ namespace Converter_WPF
 
 		private void cbox_srcCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (cbox_trgCrnc.Items[cbox_trgCrnc.Items.Count - 1] as string == currencies.Last())
+			if (!cbox_trgCrnc.Items.Contains(currencies.Last())) 
 				cbox_trgCrnc.Items.Add(currencies.Last());
 			else
 				for (int i = 0; i < currencies.Count; i++)
@@ -281,7 +281,7 @@ namespace Converter_WPF
 
 		private void cbox_trgCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (cbox_srcCrnc.Items[cbox_srcCrnc.Items.Count - 1] as string == currencies.Last())
+			if (!cbox_srcCrnc.Items.Contains(currencies.Last()))
 				cbox_srcCrnc.Items.Add(currencies.Last());
 			else
 				for (int i = 0; i < currencies.Count; i++)
