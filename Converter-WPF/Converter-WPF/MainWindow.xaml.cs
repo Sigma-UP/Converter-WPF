@@ -383,6 +383,17 @@ namespace Converter_WPF
 
         #endregion
 
-	}
+        private void ButtonMenuOpen_Click(object sender, RoutedEventArgs e)
+        {
+			ButtonMenuOpen.Visibility = Visibility.Collapsed;
+			ButtonMenuClose.Visibility = Visibility.Visible;
+		}
+
+        private void ButtonMenuClose_Click(object sender, RoutedEventArgs e)
+        {
+			ButtonMenuOpen.Visibility = Visibility.Visible;
+			ButtonMenuClose.Visibility = Visibility.Collapsed;
+        }
+    }
 }
 
