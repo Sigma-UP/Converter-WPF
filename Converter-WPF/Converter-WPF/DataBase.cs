@@ -1,7 +1,10 @@
 using System.IO;
+using System;
 using System.Collections.Generic;
-
+using MySql.Data.MySqlClient;
 using StringExtension;
+using System.Data.Common;
+using System.Windows.Controls;
 
 namespace DATABASE
 {
@@ -15,7 +18,7 @@ namespace DATABASE
 			if (LoadDataBase(db_path, AddCrnc))
 				return;
 
-			string[] defCrncs = new string[] 
+			string[] defCrncs = new string[]
 			{
 				"USD", "EUR", "UAH", "AUD", "AZN",
 				"ALL", "DZD", "XCD", "AOA", "ARS",
@@ -81,16 +84,16 @@ namespace DATABASE
 			List<string> editData = new List<string>();
 
 			StreamReader reader;
-            try
-            {
+			try
+			{
 				reader = new StreamReader(path);
 			}
-            catch
-            {
+			catch
+			{
 				isDatabaseBroken = true;
 				return;
-            }
-			
+			}
+
 			if (!isDatabaseBroken)
 			{
 				while (!reader.EndOfStream)
@@ -123,7 +126,7 @@ namespace DATABASE
 				}
 			}
 
-			if(isDatabaseBroken)
+			if (isDatabaseBroken)
 			{
 				reader.Close();
 				StreamWriter sw;
@@ -142,4 +145,86 @@ namespace DATABASE
 			}
 		}
 	}
+
+	public class MySQL_DB
+	{
+		string host;
+		int port;
+		string database;
+		string username;
+		string password;
+
+		public MySQL_DB(string host, int port, string database, string username, string password)
+		{
+			this.host = host;
+			this.port = port;
+			this.database = database;
+			this.username = username;
+			this.password = password;
+		}
+
+		
+		//creating connection exemplar
+		public MySqlConnection GetDBConnection()
+		{
+			// Connection String
+			String connString = "Server=" + this.host + ";Database=" + this.database
+				+ ";port=" + this.port + ";User Id=" + this.username + ";password=" + this.password;
+
+			MySqlConnection conn = new MySqlConnection(connString);
+
+			return conn;
+		}
+
+		
+		//getting info from DATABASE by QueryCurrency
+		public void GetInfo(List<string> outputList, string colName)
+		{
+			MySqlConnection conn = GetDBConnection();
+			conn.Open();
+
+			try
+			{
+				QuerySelect(outputList, conn, colName); 
+			}
+			catch (Exception e)
+			{
+			}
+			finally
+			{
+				// Закрыть соединение.
+				conn.Close();
+				// Уничтожить объект, освободить ресурс.
+				conn.Dispose();
+			}
+		}
+		
+
+		//A Query that fullfill Combobox;
+		private static void QuerySelect(List<string> outputList, MySqlConnection conn, string colName)
+		{
+			string sql = $"Select {colName} from currencies";
+
+			// Создать объект Command.
+			MySqlCommand cmd = new MySqlCommand();
+
+			// Сочетать Command с Connection.
+			cmd.Connection = conn;
+			cmd.CommandText = sql;
+
+
+			using (DbDataReader reader = cmd.ExecuteReader()) //using для контролируемого удаления reader за границами
+			{
+				if (reader.HasRows)
+				{
+					while (reader.Read())
+					{
+						int columnIndex = reader.GetOrdinal(colName); ;
+						outputList.Add(reader.GetString(columnIndex));
+					}
+				}
+			}
+
+		}
+	} 
 }

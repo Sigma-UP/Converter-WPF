@@ -2,14 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
 using DATABASE;
 using StringExtension;
+using MySql.Data.MySqlClient;
+
 
 namespace Converter_WPF
 {
@@ -269,28 +267,28 @@ namespace Converter_WPF
 
 		private void cbox_srcCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (cbox_trgCrnc.Items[cbox_trgCrnc.Items.Count - 1] as string == currencies.Last())
-				cbox_trgCrnc.Items.Add(currencies.Last());
-			else
-				for (int i = 0; i < currencies.Count; i++)
-				if (cbox_trgCrnc.Items[i] as string != currencies[i])
-					cbox_trgCrnc.Items.Insert(i, currencies[i--]);
+				if (cbox_trgCrnc.Items[cbox_trgCrnc.Items.Count - 1] as string == currencies.Last())
+					cbox_trgCrnc.Items.Add(currencies.Last());
+				else
+					for (int i = 0; i < currencies.Count; i++)
+						if (cbox_trgCrnc.Items[i] as string != currencies[i])
+							cbox_trgCrnc.Items.Insert(i, currencies[i--]);
 
-			cbox_trgCrnc.Items.Remove(cbox_srcCrnc.SelectedItem);
+				cbox_trgCrnc.Items.Remove(cbox_srcCrnc.SelectedItem);
+
 		}
 
 		private void cbox_trgCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (cbox_srcCrnc.Items[cbox_srcCrnc.Items.Count - 1] as string == currencies.Last())
-				cbox_srcCrnc.Items.Add(currencies.Last());
-			else
-				for (int i = 0; i < currencies.Count; i++)
-					if (cbox_srcCrnc.Items[i] as string != currencies[i])
-						cbox_srcCrnc.Items.Insert(i, currencies[i--]);
+				if (cbox_srcCrnc.Items[cbox_srcCrnc.Items.Count - 1] as string == currencies.Last())
+					cbox_srcCrnc.Items.Add(currencies.Last());
+				else
+					for (int i = 0; i < currencies.Count; i++)
+						if (cbox_srcCrnc.Items[i] as string != currencies[i])
+							cbox_srcCrnc.Items.Insert(i, currencies[i--]);
 
-			cbox_srcCrnc.Items.Remove(cbox_trgCrnc.SelectedItem);
+				cbox_srcCrnc.Items.Remove(cbox_trgCrnc.SelectedItem);
 		}
-
 
 		#region ComboBox Search
 
@@ -383,6 +381,32 @@ namespace Converter_WPF
 
         #endregion
 
-	}
+	    private void SQ_Click(object sender, RoutedEventArgs e)
+	    {
+			currencies.Clear();
+			cbox_srcCrnc.Items.Clear();
+			cbox_trgCrnc.Items.Clear();
+			
+			MySQL_DB DB = new MySQL_DB("localhost", 3306, "conv_db", "root", "Brotherhood13");
+			DB.GetDBConnection();
+
+			MySqlConnection conn = DB.GetDBConnection();
+
+
+				conn.Open();
+				MySQL_DB dB = new MySQL_DB("localhost", 3306, "conv_db", "root", "Brotherhood13");
+				
+				dB.GetInfo(currencies, "CURR_NAME");
+	
+				foreach (string item in currencies)
+                {
+
+					cbox_srcCrnc.Items.Add(item);
+					cbox_trgCrnc.Items.Add(item);
+				}
+
+
+		}
+    }
 }
 

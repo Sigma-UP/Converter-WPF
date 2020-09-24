@@ -6,7 +6,7 @@
 		xmlns:local="clr-namespace:Converter_WPF"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
 		mc:Ignorable="d"
-		Title="MainWindow" Height="190" Width="858.5" ResizeMode="NoResize" WindowStyle="None">
+		Title="MainWindow" Height="190" Width="1000" ResizeMode="NoResize" WindowStyle="None">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -44,7 +44,7 @@
         </Grid>
 
         <!--Main Program-->
-        <Grid Margin="0,0,-1,0" Grid.Row="1" Background="DarkGray">
+        <Grid Margin="0,0,10,0" Grid.Row="1" Background="DarkGray">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="134*"/>
                 <ColumnDefinition/>
@@ -148,6 +148,8 @@
             <!-- Additional options -->
             <Border Grid.Column="3" Margin="10,10,10,10">
                 <StackPanel VerticalAlignment="Center">
+                    <ComboBox x:Name="HHH"/>
+                    <TextBlock x:Name="status" Height="48" TextWrapping="Wrap"/>
                     <Border 
                         CornerRadius="10" BorderThickness="1" 
                         BorderBrush="LightGray" Background="LightGray">
@@ -179,6 +181,8 @@
                             </Button>
                         </Grid>
                     </Border>
+
+                    <Button x:Name="SQ" Click="SQ_Click"/>
                 </StackPanel>
             </Border>
             
