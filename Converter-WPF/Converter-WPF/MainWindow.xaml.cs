@@ -267,28 +267,42 @@ namespace Converter_WPF
 
 		#region Currency ComboBox event handlers
 
+		private string srcRemovedCrncCode;
+		private int srcRemovedCrncPos;
 		private void cbox_srcCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (cbox_trgCrnc.Items[cbox_trgCrnc.Items.Count - 1] as string == currencies.Last())
-				cbox_trgCrnc.Items.Add(currencies.Last());
-			else
-				for (int i = 0; i < currencies.Count; i++)
-				if (cbox_trgCrnc.Items[i] as string != currencies[i])
-					cbox_trgCrnc.Items.Insert(i, currencies[i--]);
+			if (trgRemovedCrncCode != null)
+				cbox_trgCrnc.Items.Insert(trgRemovedCrncPos, trgRemovedCrncCode);
 
-			cbox_trgCrnc.Items.Remove(cbox_srcCrnc.SelectedItem);
+			if (srcRemovedCrncCode != null)
+				cbox_srcCrnc.Items.Insert(srcRemovedCrncPos, srcRemovedCrncCode);
+
+			trgRemovedCrncCode = cbox_srcCrnc.SelectedItem as string;
+			trgRemovedCrncPos = cbox_srcCrnc.SelectedIndex;
+
+			cbox_trgCrnc.Items.Remove(trgRemovedCrncCode);
+
+			if (srcRemovedCrncCode != null)
+				cbox_srcCrnc.Items.Remove(srcRemovedCrncCode);
 		}
 
+		private string trgRemovedCrncCode;
+		private int trgRemovedCrncPos;
 		private void cbox_trgCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (cbox_srcCrnc.Items[cbox_srcCrnc.Items.Count - 1] as string == currencies.Last())
-				cbox_srcCrnc.Items.Add(currencies.Last());
-			else
-				for (int i = 0; i < currencies.Count; i++)
-					if (cbox_srcCrnc.Items[i] as string != currencies[i])
-						cbox_srcCrnc.Items.Insert(i, currencies[i--]);
+			if (srcRemovedCrncCode != null)
+				cbox_srcCrnc.Items.Insert(srcRemovedCrncPos, srcRemovedCrncCode);
 
-			cbox_srcCrnc.Items.Remove(cbox_trgCrnc.SelectedItem);
+			if (trgRemovedCrncCode != null)
+				cbox_trgCrnc.Items.Insert(trgRemovedCrncPos, trgRemovedCrncCode);
+
+			srcRemovedCrncCode = cbox_trgCrnc.SelectedItem as string;
+			srcRemovedCrncPos = cbox_trgCrnc.SelectedIndex;
+
+			cbox_srcCrnc.Items.Remove(srcRemovedCrncCode);
+
+			if (trgRemovedCrncCode != null)
+				cbox_trgCrnc.Items.Remove(trgRemovedCrncCode);
 		}
 
 
