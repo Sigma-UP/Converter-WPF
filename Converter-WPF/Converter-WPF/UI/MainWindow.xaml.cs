@@ -2,13 +2,19 @@ using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows;
 using System;
+using Converter_WPF.Core;
+using DATABASE;
 
 namespace Converter_WPF
 {
 	public partial class MainWindow : Window
 	{
-		public static List<Currency> currencies = new List<Currency>();
-		
+		public static IDatabaseAPI databaseAPI;
+
+		private static TXT_DB txtDB;
+		private static MySQL_DB sqlDB;
+		private static CurrconvAPI currconvAPI;
+
 		//sosi
 
 		//Code 0 = Work with .txt-file only - only CurrencyName available,
@@ -24,11 +30,23 @@ namespace Converter_WPF
 		
 		public static int DataBaseCode = 0;
 
+		static MainWindow()
+        {
+			txtDB = new TXT_DB("DB.txt");
+			txtDB.GetInfo();
+
+			sqlDB = new MySQL_DB("localhost", 3306, "conv_db", "root", "Brotherhood13");
+			sqlDB.GetInfo();
+
+			currconvAPI = new CurrconvAPI("5f1965af1bceb7361177");
+		}
+
 		public MainWindow()
 		{
 			InitializeComponent();
 
 			cbox_Database.ItemsSource = databases;
+			cbox_Database.SelectedIndex = 0;
 		}
 
         #region WindowManipulation
@@ -45,11 +63,11 @@ namespace Converter_WPF
         #region MenuNavigation
         private void btn_ChooseConverter_Click(object sender, RoutedEventArgs e)
         {
-			MainContent.NavigationService.Navigate(new Uri("ConverterFrame.xaml", UriKind.Relative));
+			MainContent.NavigationService.Navigate(new Uri("UI/ConverterFrame.xaml", UriKind.Relative));
 		}
 		private void btn_ChooseManage_Click(object sender, RoutedEventArgs e)
 		{
-			MainContent.NavigationService.Navigate(new Uri("DataBaseFrame.xaml", UriKind.Relative));
+			MainContent.NavigationService.Navigate(new Uri("UI/DataBaseFrame.xaml", UriKind.Relative));
 		}
         #endregion
 
@@ -57,13 +75,19 @@ namespace Converter_WPF
         {
 			DataBaseCode = cbox_Database.SelectedIndex;
 
-			if(MainContent.Source.ToString() == "ConverterFrame.xaml")
+			switch (cbox_Database.SelectedIndex)
             {
-				//ConverterFrame.cbox_FullFill();
-            }
-			else if(MainContent.Source.ToString() == "DataBaseFrame.xaml")
-            {
+				case 0:
+					databaseAPI = txtDB;
+					break;
 
+				case 1:
+					databaseAPI = sqlDB;
+					break;
+
+				case 2:
+					databaseAPI = currconvAPI;
+					break;
             }
 
 			MainContent.Refresh();

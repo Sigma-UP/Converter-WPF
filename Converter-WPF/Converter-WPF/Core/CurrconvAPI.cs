@@ -1,22 +1,36 @@
-﻿using System;
+﻿using Converter_WPF.Core;
+using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Windows.Documents;
 
 namespace Converter_WPF
 {
-    public class CurrconvAPI
+    public class CurrconvAPI : IDatabaseAPI
     {
         private string baseUrl { get; } = @"https://free.currconv.com";
         private string apiVersion { get; } = "v7";
 
         public string ApiKey { get; set; }
 
+        public List<Currency> Currencies { get { throw new NotImplementedException(); } }
+
+        public List<string> GetCurrenciesList()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save()
+        {
+            return;
+        }
+
         public CurrconvAPI(string apiKey)
         {
             ApiKey = apiKey;
         }
-
 
         public double GetExchangeRate(string srcCurrency, string trgCurrency)
         {

@@ -12,5 +12,16 @@ namespace Converter_WPF
         public int ID { get; set; }
         public string Name { get; set; }
         public double Rate { get; set; }
+
+        public Currency() { }
+
+        public Currency(int ID, string Name, double Rate)
+        {
+            this.ID = ID;
+            this.Name = Name;
+            this.Rate = Rate;
+        }
+
+
     }
 }

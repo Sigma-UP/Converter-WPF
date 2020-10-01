@@ -6,21 +6,42 @@ using System.Windows;
 using Converter_WPF;
 using System.IO;
 using System;
+using Converter_WPF.Core;
 
 namespace DATABASE
 {
-	public class TXT_DB
+	public class TXT_DB : IDatabaseAPI
 	{
 		private string path;
 
+		public List<Currency> currency;
+		public List<Currency> Currencies { get { return currency; } }
+
+		public double GetExchangeRate(string srcCrnc, string trgCrnc)
+        {
+			return double.NaN;
+        }
+
+		public List<string> GetCurrenciesList()
+        {
+			List<string> result = new List<string>();
+			foreach (Currency crnc in currency)
+				result.Add(crnc.Name);
+
+			return result;
+        }
+
+
         public TXT_DB(string path)
         {
+			currency = new List<Currency>();
+
 			path = this.path;
         }
 
-		public void GetInfo(List<Currency> currency)
+		public void GetInfo()
 		{
-			if (Load(currency))
+			if (Load())
 				return;
 
 			string[] defCrncs = new string[]
@@ -33,25 +54,20 @@ namespace DATABASE
 				"XAF", "VND", "GYD", "GHS", "GMD"
 			};
 
-			for (int i = 0; i < defCrncs.Length - 1; i++) 
+			for (int i = 0; i < defCrncs.Length; i++) 
 			{
-				Currency currentCurrency = new Currency();
-
-				currentCurrency.ID = i;
-				currentCurrency.Name = defCrncs[i];
-				currentCurrency.Rate = 1.0;
-
-				currency.Add(currentCurrency);
+				currency.Add(new Currency(i, defCrncs[i], 1.0));
 			}
 
-			Save(currency);
+			Save();
 		}
 
-		private bool Load(List<Currency> currency)
+		private bool Load()
 		{
 			Validate();
 			StreamReader sr;
 			int i = 0;
+
 			try
 			{
 				sr = new StreamReader(path);
@@ -79,7 +95,7 @@ namespace DATABASE
 			return true;
 		}
 
-		public void Save(List<Currency> currency)
+		public void Save()
 		{
 			StreamWriter sw;
 
@@ -167,13 +183,35 @@ namespace DATABASE
 		}
 	}
 
-	public class MySQL_DB
+	public class MySQL_DB : IDatabaseAPI
 	{
-		string host;
 		int port;
+		string host;
 		string database;
 		string username;
 		string password;
+
+		public List<Currency> currencies;
+		public List<Currency> Currencies { get { return currencies; } }
+
+		public double GetExchangeRate(string srcCrnc, string trgCrnc)
+        {
+			throw new NotImplementedException();
+        }
+
+		public List<string> GetCurrenciesList()
+        {
+			List<string> result = new List<string>();
+			foreach (Currency crnc in currencies)
+				result.Add(crnc.Name);
+
+			return result;
+		}
+
+		public void Save()
+        {
+			throw new NotImplementedException();
+        }
 
 		public MySQL_DB(string host, int port, string database, string username, string password)
 		{
@@ -182,6 +220,8 @@ namespace DATABASE
 			this.database = database;
 			this.username = username;
 			this.password = password;
+
+			currencies = new List<Currency>();
 		}
 
 		//getting connection
@@ -198,7 +238,7 @@ namespace DATABASE
 		
 
 		//getting FULL INFO from DATABASE by QueryCurrency
-		public void GetInfo(List<Currency> outputList)
+		public void GetInfo()
 		{
             try
             {
@@ -215,7 +255,7 @@ namespace DATABASE
 
 			try
 			{
-				QuerySelect(outputList, conn); 
+				QuerySelect(currencies, conn); 
 			}
 			catch (Exception e)
 			{

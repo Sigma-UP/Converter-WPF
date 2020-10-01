@@ -11,8 +11,6 @@ namespace Converter_WPF
 	/// </summary>
 	public partial class ConverterFrame : Page
 	{
-		private CurrconvAPI currconvAPI;
-
 		private double srcAmount;
 		private double trgAmount;
 		private double srcRate;
@@ -25,16 +23,11 @@ namespace Converter_WPF
 		{
 			InitializeComponent();
 
-			//if converter work with API or DB =>
-			if(MainWindow.DataBaseCode == 1 || MainWindow.DataBaseCode == 2)
-            {
-				tbox_srcRate.IsReadOnly = true;
-				tbox_trgRate.IsReadOnly = true;
-            }
-
-			//cbox_FullFill();
-
-			currconvAPI = new CurrconvAPI("5f1965af1bceb7361177");
+			//if(MainWindow.DataBaseCode == 1 || MainWindow.DataBaseCode == 2)
+            //{
+			//	tbox_srcRate.IsReadOnly = true;
+			//	tbox_trgRate.IsReadOnly = true;
+            //}
 
 			srcAmount = double.Parse(tbox_srcCrncAmount.Text);
 			trgAmount = double.Parse(tbox_trgCrncAmount.Text);
@@ -61,32 +54,47 @@ namespace Converter_WPF
 			cbox_srcCrnc.LostFocus += cbox_LostFocus;
 			cbox_trgCrnc.LostFocus += cbox_LostFocus;
 
-			cbox_srcCrnc.SelectedIndex = 0;
+			foreach(Currency crnc in MainWindow.databaseAPI.Currencies)
+            {
+				cbox_srcCrnc.Items.Add(crnc.Name);
+				cbox_trgCrnc.Items.Add(crnc.Name);
+            }
 
+			cbox_srcCrnc.SelectedIndex = 0;
+			
 			SelectionChangedEventHandler currencyRateSetter = delegate
 			{
 				string srcCrnc = cbox_srcCrnc.SelectedItem as string;
 				string trgCrnc = cbox_trgCrnc.SelectedItem as string;
 				BackgroundWorker worker = new BackgroundWorker();
-
+			
 				tbox_srcRate.Text = "...";
 				tbox_trgRate.Text = "...";
-
+			
 				worker.DoWork += (sender, args) =>
 				{
-					args.Result = currconvAPI.GetExchangeRate(srcCrnc, trgCrnc);
+					args.Result = MainWindow.databaseAPI.GetExchangeRate(srcCrnc, trgCrnc);
 				};
-
+			
 				worker.RunWorkerCompleted += (sender, args) =>
 				{
-					tbox_srcRate.Text = string.Format("{0:0.00##}", args.Result);
-				};
+					if ((double)args.Result != double.NaN)
+					{
+						tbox_srcRate.Text = string.Format("{0:0.00##}", 0);
+						tbox_trgRate.Text = string.Format("{0:0.00##}", 0);
+					}
+					else
+					{
+						tbox_srcRate.Text = string.Format("{0:0.00##}", args.Result);
+					}
 
+				};
+			
 				worker.RunWorkerAsync();
 			};
 			cbox_srcCrnc.SelectionChanged += currencyRateSetter;
 			cbox_trgCrnc.SelectionChanged += currencyRateSetter;
-
+			
 			cbox_trgCrnc.SelectedIndex = 1;
 
 		}
@@ -181,43 +189,54 @@ namespace Converter_WPF
 			}
 		}
 
-		
+
 
 		#endregion
 
 		#region Currency ComboBox event handlers
+
+		private string srcRemovedCrncCode;
+		private int srcRemovedCrncPos;
 		private void cbox_srcCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{			
-			if (cbox_srcCrnc.Items.Count > 1)
-				if (cbox_trgCrnc.Items[cbox_trgCrnc.Items.Count - 1] as string == MainWindow.currencies.Last().Name)
-					cbox_trgCrnc.Items.Add(MainWindow.currencies.Last());
-				else
-					for (int i = 0; i < MainWindow.currencies.Count; i++)
-						if (cbox_trgCrnc.Items[i] as string != MainWindow.currencies[i].Name)
-							cbox_trgCrnc.Items.Insert(i, MainWindow.currencies[i--]);
-		
-			cbox_trgCrnc.Items.Remove(cbox_srcCrnc.SelectedItem);
-		
+		{
+			if (trgRemovedCrncCode != null)
+				cbox_trgCrnc.Items.Insert(trgRemovedCrncPos, trgRemovedCrncCode);
+
+			if (srcRemovedCrncCode != null)
+				cbox_srcCrnc.Items.Insert(srcRemovedCrncPos, srcRemovedCrncCode);
+
+			trgRemovedCrncCode = cbox_srcCrnc.SelectedItem as string;
+			trgRemovedCrncPos = cbox_srcCrnc.SelectedIndex;
+
+			cbox_trgCrnc.Items.Remove(trgRemovedCrncCode);
+			if (srcRemovedCrncCode != null)
+				cbox_srcCrnc.Items.Remove(srcRemovedCrncCode);
 		}
-		
+
+		private string trgRemovedCrncCode;
+		private int trgRemovedCrncPos;
 		private void cbox_trgCrnc_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (cbox_trgCrnc.Items.Count > 1)
-		
-				if (cbox_srcCrnc.Items[cbox_srcCrnc.Items.Count - 1] as string == MainWindow.currencies.Last().Name)
-					cbox_srcCrnc.Items.Add(MainWindow.currencies.Last());
-				else
-					for (int i = 0; i < MainWindow.currencies.Count; i++)
-						if (cbox_srcCrnc.Items[i] as string != MainWindow.currencies[i].Name)
-							cbox_srcCrnc.Items.Insert(i, MainWindow.currencies[i--]);
-		
-			cbox_srcCrnc.Items.Remove(cbox_trgCrnc.SelectedItem);
+			if (srcRemovedCrncCode != null)
+				cbox_srcCrnc.Items.Insert(srcRemovedCrncPos, srcRemovedCrncCode);
+
+			if (trgRemovedCrncCode != null)
+				cbox_trgCrnc.Items.Insert(trgRemovedCrncPos, trgRemovedCrncCode);
+
+			srcRemovedCrncCode = cbox_trgCrnc.SelectedItem as string;
+			srcRemovedCrncPos = cbox_trgCrnc.SelectedIndex;
+
+			cbox_srcCrnc.Items.Remove(srcRemovedCrncCode);
+
+			if (trgRemovedCrncCode != null)
+				cbox_trgCrnc.Items.Remove(trgRemovedCrncCode);
 		}
-        #endregion
 
-        #region ComboBox Search
+		#endregion
 
-        private void cbox_ShowAllItems(ComboBox cbox)
+		#region ComboBox Search
+
+		private void cbox_ShowAllItems(ComboBox cbox)
 		{
 			for (int i = 0; i < cbox.Items.Count; i++)
 			{

@@ -22,8 +22,9 @@ namespace Converter_WPF
         {
 			InitializeComponent();
             tbox_NewCurrency_Code.TextChanged += tbox_newCurrency_Code_TextChanged;
-			DataShow();
-			
+
+			//MainWindow.databaseAPI.Currencies
+
 			btn_CurrAdd.IsEnabled = false;
         }
 
@@ -61,15 +62,13 @@ namespace Converter_WPF
 
 		private void btn_CurrAdd_Click(object sender, RoutedEventArgs e)
 		{
-			TXT_DB dB = new TXT_DB("DB.txt");
-
 			btn_CurrAdd.IsEnabled = false;
 			string addStatus = "ADDED";
 			bool isAddAvailable = true;
 			Border border = new Border();
 		
-			for (int i = 0; i < MainWindow.currencies.Count - 1; i++)
-				if (tbox_NewCurrency_Code.Text == MainWindow.currencies[i].Name)
+			for (int i = 0; i < MainWindow.databaseAPI.Currencies.Count - 1; i++)
+				if (tbox_NewCurrency_Code.Text == MainWindow.databaseAPI.Currencies[i].Name)
 				{
 					isAddAvailable = false;
 					border.Visibility = Visibility.Visible;
@@ -80,18 +79,18 @@ namespace Converter_WPF
 			{
 				Currency currentCurrency = new Currency();
 				
-				currentCurrency.ID = MainWindow.currencies.Count;
+				currentCurrency.ID = MainWindow.databaseAPI.Currencies.Count;
 				currentCurrency.Name = tbox_NewCurrency_Code.Text;
 				currentCurrency.Rate = Convert.ToDouble(tbox_NewCurrency_Rate.Text);
 
 				object lockObj = new object();
-				BindingOperations.EnableCollectionSynchronization(MainWindow.currencies, lockObj);
+				BindingOperations.EnableCollectionSynchronization(MainWindow.databaseAPI.Currencies, lockObj);
 
-				MainWindow.currencies.Add(currentCurrency);
+				MainWindow.databaseAPI.Currencies.Add(currentCurrency);
 
 				CollectionViewSource.GetDefaultView(currencyDataGrid.ItemsSource).Refresh();
 
-				dB.Save(MainWindow.currencies);
+				MainWindow.databaseAPI.Save();
 			}
 			else
 				border.Visibility = Visibility.Visible;
@@ -121,51 +120,10 @@ namespace Converter_WPF
         #endregion
 		
 		#region DatabaseShow
-        private void DataShow()
-        {
-			MainWindow.currencies.Clear();
-			
-            if (MainWindow.DataBaseCode == 0)
-				SHOW_txt();
-			else if (MainWindow.DataBaseCode == 1)
-				SHOW_MySql();
-			else if (MainWindow.DataBaseCode == 2)
-				SHOW_API();
-
-			currencyDataGrid.ItemsSource = MainWindow.currencies;
-		}
-		private void SHOW_API()
-        {
-			//заполнение MainWindow.currencies с АПИ. Поля для заполнения:
-			//ID  - int
-			//Name - string
-			//Rate - double
-        }
-		private void SHOW_txt()
-        {
-			TXT_DB dB = new TXT_DB("DB.txt");
-			dB.GetInfo(MainWindow.currencies);
-		}
-		private void SHOW_MySql()
-		{
-			MySQL_DB dB = new MySQL_DB("localhost", 3306, "conv_db", "root", "Brotherhood13");
-			dB.GetInfo(MainWindow.currencies);
-		}
-
+        
         private void btn_dbSave_Click(object sender, RoutedEventArgs e)
         {
-			switch (MainWindow.DataBaseCode)
-			{
-				case 0:
-					break;
-				case 1:
-					break;
-				case 2:
-					break;
-
-                default:
-                    break;
-            }
+			MainWindow.databaseAPI.Save();
         }
 
         #endregion
