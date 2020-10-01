@@ -1,21 +1,26 @@
-using System.IO;
-using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
-using StringExtension;
 using System.Data.Common;
-using System.Windows.Controls;
+using StringExtension;
+using System.Windows;
+using Converter_WPF;
+using System.IO;
+using System;
 
 namespace DATABASE
 {
 	public class TXT_DB
 	{
-		public delegate void AddNewCrncMethod(string currencyCode);
+		private string path;
 
+        public TXT_DB(string path)
+        {
+			path = this.path;
+        }
 
-		public static void DB_Load(string db_path, AddNewCrncMethod AddCrnc)
+		public void GetInfo(List<Currency> currency)
 		{
-			if (LoadDataBase(db_path, AddCrnc))
+			if (Load(currency))
 				return;
 
 			string[] defCrncs = new string[]
@@ -27,17 +32,26 @@ namespace DATABASE
 				"BIF", "BTN", "VUV", "GBP", "VES",
 				"XAF", "VND", "GYD", "GHS", "GMD"
 			};
-			foreach (string crnc in defCrncs)
-				AddCrnc(crnc);
 
-			SaveDataBase(db_path, new List<string>(defCrncs));
+			for (int i = 0; i < defCrncs.Length - 1; i++) 
+			{
+				Currency currentCurrency = new Currency();
+
+				currentCurrency.ID = i;
+				currentCurrency.Name = defCrncs[i];
+				currentCurrency.Rate = 1.0;
+
+				currency.Add(currentCurrency);
+			}
+
+			Save(currency);
 		}
 
-		private static bool LoadDataBase(string path, AddNewCrncMethod AddCrnc)
+		private bool Load(List<Currency> currency)
 		{
-			DB_Validate(path);
+			Validate();
 			StreamReader sr;
-
+			int i = 0;
 			try
 			{
 				sr = new StreamReader(path);
@@ -50,15 +64,22 @@ namespace DATABASE
 			string line;
 			while ((line = sr.ReadLine()) != null)
 				if (line.Length == 3)
-					AddCrnc(line);
+				{
+					Currency currentCurrency = new Currency();
 
+					currentCurrency.ID = i;
+					currentCurrency.Name = line;
+					currentCurrency.Rate = 1.0;
+
+					currency.Add(currentCurrency);
+				}
 			sr.Close();
 
 
 			return true;
 		}
 
-		public static void SaveDataBase(string path, List<string> currencies)
+		public void Save(List<Currency> currency)
 		{
 			StreamWriter sw;
 
@@ -71,12 +92,16 @@ namespace DATABASE
 				return;
 			}
 
-			for (int i = 0; i < currencies.Count; i++)
-				sw.WriteLine(currencies[i]);
+			for (int i = 0; i < currency.Count; i++)
+			{
+				sw.WriteLine(currency[i].Name);
+				currency[i].ID = i;
+				currency[i].Rate = 1.0;
+			}
 			sw.Close();
 		}
 
-		public static void DB_Validate(string path)
+		private void Validate()
 		{
 			bool isDatabaseBroken = false;
 			string currentLine;
@@ -85,46 +110,42 @@ namespace DATABASE
 
 			StreamReader reader;
 			try
-			{
-				reader = new StreamReader(path);
-			}
+				{ reader = new StreamReader(path); }
 			catch
 			{
 				isDatabaseBroken = true;
 				return;
 			}
 
-			if (!isDatabaseBroken)
+			while (!reader.EndOfStream)
 			{
-				while (!reader.EndOfStream)
-				{
-					currentLine = reader.ReadLine();
-					originalData.Add(currentLine);
-				}
-
-				for (int i = 0; i < originalData.Count; i++)
-				{
-					bool isFormatBroken = false;
-					bool isRepeat = false;
-
-					if (originalData[i].Length == 3 && originalData[i].isLetter() && originalData[i].isUpper())
-					{
-						foreach (string existCurrency in editData)
-							if (originalData[i] == existCurrency)
-							{
-								isRepeat = true;
-								break;
-							}
-					}
-					else
-						isFormatBroken = true;
-
-					if (!isRepeat && !isFormatBroken)
-						editData.Add(originalData[i]);
-					else
-						isDatabaseBroken = true;
-				}
+				currentLine = reader.ReadLine();
+				originalData.Add(currentLine);
 			}
+
+			for (int i = 0; i < originalData.Count; i++)
+			{
+				bool isFormatBroken = false;
+				bool isRepeat = false;
+
+				if (originalData[i].Length == 3 && originalData[i].isLetter() && originalData[i].isUpper())
+				{
+					foreach (string existCurrency in editData)
+						if (originalData[i] == existCurrency)
+						{
+							isRepeat = true;
+							break;
+						}
+				}
+				else
+					isFormatBroken = true;
+
+				if (!isRepeat && !isFormatBroken)
+					editData.Add(originalData[i]);
+				else
+					isDatabaseBroken = true;
+			}
+			
 
 			if (isDatabaseBroken)
 			{
@@ -163,8 +184,7 @@ namespace DATABASE
 			this.password = password;
 		}
 
-		
-		//creating connection exemplar
+		//getting connection
 		public MySqlConnection GetDBConnection()
 		{
 			// Connection String
@@ -175,20 +195,32 @@ namespace DATABASE
 
 			return conn;
 		}
-
 		
-		//getting info from DATABASE by QueryCurrency
-		public void GetInfo(List<string> outputList, string colName)
+
+		//getting FULL INFO from DATABASE by QueryCurrency
+		public void GetInfo(List<Currency> outputList)
 		{
+            try
+            {
+				GetDBConnection().Open();
+            }
+            catch (Exception)
+            {
+				MessageBox.Show("Failed to connect. Retry later.");
+				return;
+            }
+
 			MySqlConnection conn = GetDBConnection();
 			conn.Open();
 
 			try
 			{
-				QuerySelect(outputList, conn, colName); 
+				QuerySelect(outputList, conn); 
 			}
 			catch (Exception e)
 			{
+				MessageBox.Show("Failed to query. Retry later.");
+				return;
 			}
 			finally
 			{
@@ -199,11 +231,10 @@ namespace DATABASE
 			}
 		}
 		
-
 		//A Query that fullfill Combobox;
-		private static void QuerySelect(List<string> outputList, MySqlConnection conn, string colName)
+		private void QuerySelect(List<Currency> outputList, MySqlConnection conn)
 		{
-			string sql = $"Select {colName} from currencies";
+			string sql = "SELECT * FROM currencies;";
 
 			// Создать объект Command.
 			MySqlCommand cmd = new MySqlCommand();
@@ -212,19 +243,20 @@ namespace DATABASE
 			cmd.Connection = conn;
 			cmd.CommandText = sql;
 
-
 			using (DbDataReader reader = cmd.ExecuteReader()) //using для контролируемого удаления reader за границами
 			{
 				if (reader.HasRows)
 				{
 					while (reader.Read())
 					{
-						int columnIndex = reader.GetOrdinal(colName); ;
-						outputList.Add(reader.GetString(columnIndex));
+						Currency currentCurrency = new Currency();
+						currentCurrency.ID = reader.GetInt32(reader.GetOrdinal("ID"));
+						currentCurrency.Name = reader.GetString(reader.GetOrdinal("CURR_NAME"));
+						currentCurrency.Rate = reader.GetDouble(reader.GetOrdinal("CURR_RARE"));
+						outputList.Add(currentCurrency);
 					}
 				}
 			}
-
 		}
 	} 
 }
