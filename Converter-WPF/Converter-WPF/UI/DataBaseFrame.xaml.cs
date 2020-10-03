@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Collections.Generic;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows;
 using System;
@@ -18,17 +19,24 @@ namespace Converter_WPF
     /// </summary>
     public partial class DataBaseFrame : Page
     {
+		private List<Currency> dataGridList;
+
 		public DataBaseFrame()
         {
 			InitializeComponent();
             tbox_NewCurrency_Code.TextChanged += tbox_newCurrency_Code_TextChanged;
 
-			//MainWindow.databaseAPI.Currencies
+			dataGridList = new List<Currency>(MainWindow.databaseAPI.Currencies);
+			currencyDataGrid.ItemsSource = dataGridList;
+
+			currencyDataGrid_NameCollumn.IsReadOnly = !MainWindow.databaseAPI.isNameEditAllowed;
+			currencyDataGrid_RateCollumn.IsReadOnly = !MainWindow.databaseAPI.isRateEditAllowed;
 
 			btn_CurrAdd.IsEnabled = false;
         }
 
 		#region NewCurrencyHandlers
+
         bool isValid_Code = false;
 		bool isValid_Rate = false;
 		private void tbox_newCurrency_Code_TextChanged(object sender, TextChangedEventArgs e)
@@ -79,7 +87,6 @@ namespace Converter_WPF
 			{
 				Currency currentCurrency = new Currency();
 				
-				currentCurrency.ID = MainWindow.databaseAPI.Currencies.Count;
 				currentCurrency.Name = tbox_NewCurrency_Code.Text;
 				currentCurrency.Rate = Convert.ToDouble(tbox_NewCurrency_Rate.Text);
 
@@ -117,29 +124,16 @@ namespace Converter_WPF
 			dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
 			dispatcherTimer.Start();
 		}
+
         #endregion
 		
-		#region DatabaseShow
-        
         private void btn_dbSave_Click(object sender, RoutedEventArgs e)
         {
+			// dataGridList Validation
+			// Update MainWindow.databaseAPI.Currencies from validated dataGridList
+
 			MainWindow.databaseAPI.Save();
         }
 
-        #endregion
-
-
-
-        //непонятная ебала
-        //private void currencyDataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
-        //{
-        //	int selectedColumn = currencyDataGrid.CurrentCell.Column.DisplayIndex;
-        //	var selectedCell = currencyDataGrid.SelectedCells[selectedColumn];
-        //	var cellContent = selectedCell.Column.GetCellContent(selectedCell.Item);
-        //	if (cellContent is TextBlock)
-        //	{
-        //		MessageBox.Show((cellContent as TextBlock).Text);
-        //	}
-        //}
     }
 }

@@ -23,12 +23,6 @@ namespace Converter_WPF
 		{
 			InitializeComponent();
 
-			//if(MainWindow.DataBaseCode == 1 || MainWindow.DataBaseCode == 2)
-            //{
-			//	tbox_srcRate.IsReadOnly = true;
-			//	tbox_trgRate.IsReadOnly = true;
-            //}
-
 			srcAmount = double.Parse(tbox_srcCrncAmount.Text);
 			trgAmount = double.Parse(tbox_trgCrncAmount.Text);
 			srcRate = double.Parse(tbox_srcRate.Text);
@@ -70,7 +64,7 @@ namespace Converter_WPF
 			
 				tbox_srcRate.Text = "...";
 				tbox_trgRate.Text = "...";
-			
+
 				worker.DoWork += (sender, args) =>
 				{
 					args.Result = MainWindow.databaseAPI.GetExchangeRate(srcCrnc, trgCrnc);
@@ -78,16 +72,10 @@ namespace Converter_WPF
 			
 				worker.RunWorkerCompleted += (sender, args) =>
 				{
-					if ((double)args.Result != double.NaN)
-					{
-						tbox_srcRate.Text = string.Format("{0:0.00##}", 0);
-						tbox_trgRate.Text = string.Format("{0:0.00##}", 0);
-					}
-					else
-					{
-						tbox_srcRate.Text = string.Format("{0:0.00##}", args.Result);
-					}
+					double res = (double)args.Result;
 
+					tbox_trgRate.Text = string.Format("{0:0.00##}", res);
+					tbox_srcRate.Text = string.Format("{0:0.00##}", res);
 				};
 			
 				worker.RunWorkerAsync();
@@ -96,7 +84,6 @@ namespace Converter_WPF
 			cbox_trgCrnc.SelectionChanged += currencyRateSetter;
 			
 			cbox_trgCrnc.SelectedIndex = 1;
-
 		}
 
 		private void ValidateTextBoxInput()

@@ -14,12 +14,15 @@ namespace DATABASE
 	{
 		private string path;
 
+		public bool isNameEditAllowed { get; } = true;
+		public bool isRateEditAllowed { get; } = false;
+
 		public List<Currency> currency;
 		public List<Currency> Currencies { get { return currency; } }
 
 		public double GetExchangeRate(string srcCrnc, string trgCrnc)
         {
-			return double.NaN;
+			return 0;
         }
 
 		public List<string> GetCurrenciesList()
@@ -56,7 +59,7 @@ namespace DATABASE
 
 			for (int i = 0; i < defCrncs.Length; i++) 
 			{
-				currency.Add(new Currency(i, defCrncs[i], 1.0));
+				currency.Add(new Currency(defCrncs[i], 0));
 			}
 
 			Save();
@@ -83,7 +86,6 @@ namespace DATABASE
 				{
 					Currency currentCurrency = new Currency();
 
-					currentCurrency.ID = i;
 					currentCurrency.Name = line;
 					currentCurrency.Rate = 1.0;
 
@@ -101,7 +103,7 @@ namespace DATABASE
 
 			try
 			{
-				sw = new StreamWriter(path, false);
+				sw = new StreamWriter(path);
 			}
 			catch
 			{
@@ -111,7 +113,6 @@ namespace DATABASE
 			for (int i = 0; i < currency.Count; i++)
 			{
 				sw.WriteLine(currency[i].Name);
-				currency[i].ID = i;
 				currency[i].Rate = 1.0;
 			}
 			sw.Close();
@@ -183,120 +184,4 @@ namespace DATABASE
 		}
 	}
 
-	public class MySQL_DB : IDatabaseAPI
-	{
-		int port;
-		string host;
-		string database;
-		string username;
-		string password;
-
-		public List<Currency> currencies;
-		public List<Currency> Currencies { get { return currencies; } }
-
-		public double GetExchangeRate(string srcCrnc, string trgCrnc)
-        {
-			throw new NotImplementedException();
-        }
-
-		public List<string> GetCurrenciesList()
-        {
-			List<string> result = new List<string>();
-			foreach (Currency crnc in currencies)
-				result.Add(crnc.Name);
-
-			return result;
-		}
-
-		public void Save()
-        {
-			throw new NotImplementedException();
-        }
-
-		public MySQL_DB(string host, int port, string database, string username, string password)
-		{
-			this.host = host;
-			this.port = port;
-			this.database = database;
-			this.username = username;
-			this.password = password;
-
-			currencies = new List<Currency>();
-		}
-
-		//getting connection
-		public MySqlConnection GetDBConnection()
-		{
-			// Connection String
-			String connString = "Server=" + this.host + ";Database=" + this.database
-				+ ";port=" + this.port + ";User Id=" + this.username + ";password=" + this.password;
-
-			MySqlConnection conn = new MySqlConnection(connString);
-
-			return conn;
-		}
-		
-
-		//getting FULL INFO from DATABASE by QueryCurrency
-		public void GetInfo()
-		{
-            try
-            {
-				GetDBConnection().Open();
-            }
-            catch (Exception)
-            {
-				MessageBox.Show("Failed to connect. Retry later.");
-				return;
-            }
-
-			MySqlConnection conn = GetDBConnection();
-			conn.Open();
-
-			try
-			{
-				QuerySelect(currencies, conn); 
-			}
-			catch (Exception e)
-			{
-				MessageBox.Show("Failed to query. Retry later.");
-				return;
-			}
-			finally
-			{
-				// Закрыть соединение.
-				conn.Close();
-				// Уничтожить объект, освободить ресурс.
-				conn.Dispose();
-			}
-		}
-		
-		//A Query that fullfill Combobox;
-		private void QuerySelect(List<Currency> outputList, MySqlConnection conn)
-		{
-			string sql = "SELECT * FROM currencies;";
-
-			// Создать объект Command.
-			MySqlCommand cmd = new MySqlCommand();
-
-			// Сочетать Command с Connection.
-			cmd.Connection = conn;
-			cmd.CommandText = sql;
-
-			using (DbDataReader reader = cmd.ExecuteReader()) //using для контролируемого удаления reader за границами
-			{
-				if (reader.HasRows)
-				{
-					while (reader.Read())
-					{
-						Currency currentCurrency = new Currency();
-						currentCurrency.ID = reader.GetInt32(reader.GetOrdinal("ID"));
-						currentCurrency.Name = reader.GetString(reader.GetOrdinal("CURR_NAME"));
-						currentCurrency.Rate = reader.GetDouble(reader.GetOrdinal("CURR_RARE"));
-						outputList.Add(currentCurrency);
-					}
-				}
-			}
-		}
-	} 
 }

@@ -6,7 +6,7 @@
 		xmlns:local="clr-namespace:Converter_WPF"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
 		mc:Ignorable="d"
-		Title="MainWindow" Height="190" Width="800" ResizeMode="NoResize" WindowStyle="None">
+		Title="MainWindow" Height="200" Width="800" ResizeMode="NoResize" WindowStyle="None">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -52,23 +52,17 @@
 
 
             <!--Menu-->
-            <Border Grid.Column="0" Margin="0,0,10,0" Background="Gray">
-                <ListView Margin="0,0,0,-48">
-                    <ListViewItem>
-                        <StackPanel VerticalAlignment="Top">
-                            <TextBlock Text="Menu" HorizontalAlignment="Center"/>
-                            <Button x:Name="btn_ChooseConverter" Content="Converter" Width = "120" BorderThickness="0" Background="{x:Null}" Click="btn_ChooseConverter_Click"/>
-                            <Button x:Name="btn_ChooseManage" Content="DB Manage"   Width = "120" BorderThickness="0" Background="{x:Null}" Click="btn_ChooseManage_Click"/>
-                        </StackPanel>
-                    </ListViewItem>
-
-                    <ComboBox x:Name="cbox_Database" Width="120" HorizontalAlignment="Center" SelectionChanged="cbox_Database_SelectionChanged"/>
-                
-                </ListView>
+            <Border Grid.Column="0" Margin="0,0,5,0" Background="Gray">
+                <StackPanel VerticalAlignment="Top">
+                    <TextBlock Text="Menu" HorizontalAlignment="Center"/>
+                    <Button x:Name="btn_ChooseConverter" Content="Converter" Width = "120" BorderThickness="0" Background="{x:Null}" Click="btn_ChooseConverter_Click"/>
+                    <Button x:Name="btn_ChooseManage" Content="DB Manage"   Width = "120" BorderThickness="0" Background="{x:Null}" Click="btn_ChooseManage_Click"/>
+                </StackPanel>
             </Border>
+            <ComboBox x:Name="cbox_Database" Width="100" HorizontalAlignment="Center" VerticalAlignment="Bottom" SelectionChanged="cbox_Database_SelectionChanged" Margin="10,0,20,10" FontSize="16"/>
 
             <!--MainContent-->
-            <Frame x:Name="MainContent" Source="DataBaseFrame.xaml" Grid.Column="1"  NavigationUIVisibility="Hidden"/>
+            <Frame x:Name="MainContent" Source="ConverterFrame.xaml" Grid.Column="1"  NavigationUIVisibility="Hidden"/>
 
         </Grid>
     </Grid>

@@ -7,21 +7,26 @@
       xmlns:local="clr-namespace:Converter_WPF"
       xmlns:col="clr-namespace:System.Collections;assembly=mscorlib"
       mc:Ignorable="d" 
-      d:DesignHeight="160" d:DesignWidth="650"
+      d:DesignHeight="300" d:DesignWidth="500"
       Title="ShowDataBase">
 
     <Grid Background="Gray">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="75*"/>
-            <ColumnDefinition Width="25*"/>
+            <ColumnDefinition Width="35*"/>
         </Grid.ColumnDefinitions>
 
         <Border BorderBrush="Black" BorderThickness="1">
-            <DataGrid x:Name="currencyDataGrid" AutoGenerateColumns="True"  SelectionUnit="Cell"/>
+            <DataGrid x:Name="currencyDataGrid" SelectionUnit="Cell" AutoGenerateColumns="False" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="currencyDataGrid_NameCollumn" Header="Name" Binding="{Binding Path=Name}" Width="100"/>
+                    <DataGridTextColumn x:Name="currencyDataGrid_RateCollumn" Header="Rate" Binding="{Binding Path=Rate}" Width="100"/>
+                </DataGrid.Columns>
+            </DataGrid>
         </Border>
 
         <!-- Additional options -->
-        <StackPanel Grid.Column="1" Orientation="Vertical">
+        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5 0 5 0">
             <Border 
                 CornerRadius="10" BorderThickness="1" 
                 BorderBrush="LightGray" Background="LightGray">
@@ -78,8 +83,9 @@
                 <materialDesign:PackIcon Kind="Add" Height="27" Width="26"/>
             </Button>
 
-            <Button x:Name="btn_dbSave" Click="btn_dbSave_Click"/>
         </StackPanel>
+
+        <Button Grid.Column="1" Margin="5" x:Name="btn_dbSave" VerticalAlignment="Bottom" Click="btn_dbSave_Click"/>
 
     </Grid>
 </Page>
