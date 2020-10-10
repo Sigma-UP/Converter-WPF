@@ -15,6 +15,6 @@ namespace Converter_WPF.Core
 
         double GetExchangeRate(string srcCrnc, string trgCrnc);
         List<string> GetCurrenciesList();
-        void Save();
+        void Rewrite(List<Currency> currencies);
     }
 }

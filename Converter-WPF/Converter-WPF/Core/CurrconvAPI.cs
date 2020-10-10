@@ -74,14 +74,24 @@ namespace Converter_WPF
 
         public double GetExchangeRate(string srcCurrency, string trgCurrency)
         {
-            //string jsonString = GetResponse($"{baseUrl}/api/{apiVersion}/convert?q={srcCurrency}_{trgCurrency}&compact=ultra&apiKey={ApiKey}");
-            //string rateString = jsonString.Substring(jsonString.IndexOf(':') + 1);
-            //rateString = rateString.Trim('}').Replace(".", ",");
-            //
-            //return double.Parse(rateString);
+            string jsonString;
 
-            Thread.Sleep(300);
-            return new Random().NextDouble(); 
+            try
+            {
+                jsonString = GetResponse($"{baseUrl}/api/{apiVersion}/convert?q={srcCurrency}_{trgCurrency}&compact=ultra&apiKey={ApiKey}");
+            }
+            catch
+            {
+                return 0;
+            }
+
+            string rateString = jsonString.Substring(jsonString.IndexOf(':') + 1);
+            rateString = rateString.Trim('}').Replace(".", ",");
+
+            return double.Parse(rateString);
+
+            //Thread.Sleep(300);
+            //return new Random().NextDouble(); 
         }
 
         private static string GetResponse(string url)
@@ -89,7 +99,7 @@ namespace Converter_WPF
             return new WebClient().DownloadString(url);
         }
 
-        public void Save()
+        public void Rewrite(List<Currency> currencies)
         {
             return;
         }

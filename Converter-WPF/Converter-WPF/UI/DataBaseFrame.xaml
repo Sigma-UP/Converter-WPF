@@ -16,62 +16,70 @@
             <ColumnDefinition Width="35*"/>
         </Grid.ColumnDefinitions>
 
-        <Border BorderBrush="Black" BorderThickness="1">
-            <DataGrid x:Name="currencyDataGrid" SelectionUnit="Cell" AutoGenerateColumns="False" >
-                <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="currencyDataGrid_NameCollumn" Header="Name" Binding="{Binding Path=Name}" Width="100"/>
-                    <DataGridTextColumn x:Name="currencyDataGrid_RateCollumn" Header="Rate" Binding="{Binding Path=Rate}" Width="100"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Border>
+        <DataGrid x:Name="currencyDataGrid" SelectionUnit="Cell" AutoGenerateColumns="False" Margin="0,0,0,5" >
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="currencyDataGrid_NameCollumn" Header="Name" Binding="{Binding Path=Name}" Width="100"/>
+                <DataGridTextColumn x:Name="currencyDataGrid_RateCollumn" Header="Rate" Binding="{Binding Path=Rate}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
         <!-- Additional options -->
         <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5 0 5 0">
+            <Border BorderThickness="1" BorderBrush="LightGray" 
+                    Background="LightGray" Margin="5,0,0,1">
+                <TextBlock Text="Add new currency:" HorizontalAlignment="Center" FontSize="12" 
+                       Margin="10,10,10,5" Foreground="DarkGray" FontWeight="Bold"/>
+            </Border>
             <Border 
-                CornerRadius="10" BorderThickness="1" 
+                BorderThickness="1" Margin="5,0,0,0"
                 BorderBrush="LightGray" Background="LightGray">
                 <Grid x:Name="grid_NewAdd">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
                         <ColumnDefinition Width="40"/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
                     <TextBox
-                            x:Name="tbox_NewCurrency_Code" Grid.Column="0" 
+                            x:Name="tbox_NewCurrency_Code" Grid.Column="1" 
                             Background="LightGray" 
 							CharacterCasing="Upper" FontWeight="Bold" 
 							FontSize="17" Height="27"
                             Margin="5" TextAlignment="Center"
                             BorderThickness="0"/>
                     <!-- Red Line for invalid output -->
-                    <Border Grid.Column="0" Margin="5"  
+                    <Border Grid.Column="1" Margin="5"  
                             Visibility="Hidden" Name="border_newCrnc" 
                             BorderThickness="1" BorderBrush="Red" Height="2" 
                             VerticalAlignment="Bottom" HorizontalAlignment="Stretch"></Border>
+
+                    <TextBlock Text="CODE:" Grid.Column="0" VerticalAlignment="Center" 
+                               Margin="3" Foreground="Gray"/>
                 </Grid>
             </Border>
-
             <Border 
-                CornerRadius="10" BorderThickness="1" 
+                BorderThickness="1" Margin="5,0,0,0"
                 BorderBrush="LightGray" Background="LightGray">
                 <Grid x:Name="grid_NewCurr_Rate">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
                         <ColumnDefinition Width="40"/>
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
                     <TextBox
-                            x:Name="tbox_NewCurrency_Rate" Grid.Column="0" 
+                            x:Name="tbox_NewCurrency_Rate" Grid.Column="1" 
                             Background="LightGray" 
 							CharacterCasing="Upper" FontWeight="Bold" 
 							FontSize="17" Height="27"
                             Margin="5" TextAlignment="Center"
                             BorderThickness="0" TextChanged="tbox_newCurrency_Rate_TextChanged"/>
                     <!-- Red Line for invalid output -->
-                    <Border Grid.Column="0" Margin="5"  
+                    <Border Grid.Column="1" Margin="5"  
                             Visibility="Hidden" Name="border_newCrnc_Rate" 
                             BorderThickness="0" BorderBrush="Red" Height="2" 
                             VerticalAlignment="Bottom" HorizontalAlignment="Stretch"/>
+                    <TextBlock Text="RATE:" Grid.Column="0" VerticalAlignment="Center" 
+                               Margin="3" Foreground="Gray"/>
+
                 </Grid>
             </Border>
             <Button	    
@@ -82,10 +90,13 @@
                             VerticalAlignment="Bottom" Width="30" Height="Auto">
                 <materialDesign:PackIcon Kind="Add" Height="27" Width="26"/>
             </Button>
-
         </StackPanel>
-
-        <Button Grid.Column="1" Margin="5" x:Name="btn_dbSave" VerticalAlignment="Bottom" Click="btn_dbSave_Click"/>
-
+        <Border Grid.Column="1" VerticalAlignment="Bottom" 
+                BorderBrush="DarkGray" BorderThickness="1"
+                Margin="5,10,5,5" Background="DarkGray">
+            <Button  x:Name="btn_dbSave" IsEnabled="True"
+                      Click="btn_dbSave_Click" BorderThickness="0"
+                     Content="Save Changes" Background="{x:Null}"/>
+        </Border>
     </Grid>
 </Page>

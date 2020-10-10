@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using StringExtension;
 
 
 namespace Converter_WPF
@@ -20,5 +16,11 @@ namespace Converter_WPF
             this.Rate = Rate;
         }
 
+        public bool isValid()
+        {
+            if (this.Name.isUpper() && this.Name.isUpper() && this.Name.Length == 3 && this.Rate.ToString().isNumber()) 
+                return true;
+            return false;
+        }
     }
 }

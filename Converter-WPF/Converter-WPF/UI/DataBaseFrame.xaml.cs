@@ -75,8 +75,8 @@ namespace Converter_WPF
 			bool isAddAvailable = true;
 			Border border = new Border();
 		
-			for (int i = 0; i < MainWindow.databaseAPI.Currencies.Count - 1; i++)
-				if (tbox_NewCurrency_Code.Text == MainWindow.databaseAPI.Currencies[i].Name)
+			for (int i = 0; i < dataGridList.Count - 1; i++)
+				if (tbox_NewCurrency_Code.Text == dataGridList[i].Name)
 				{
 					isAddAvailable = false;
 					border.Visibility = Visibility.Visible;
@@ -93,11 +93,10 @@ namespace Converter_WPF
 				object lockObj = new object();
 				BindingOperations.EnableCollectionSynchronization(MainWindow.databaseAPI.Currencies, lockObj);
 
-				MainWindow.databaseAPI.Currencies.Add(currentCurrency);
+				dataGridList.Add(currentCurrency);
+				MainWindow.databaseAPI.Currencies.Add(currentCurrency); 
 
 				CollectionViewSource.GetDefaultView(currencyDataGrid.ItemsSource).Refresh();
-
-				MainWindow.databaseAPI.Save();
 			}
 			else
 				border.Visibility = Visibility.Visible;
@@ -132,8 +131,19 @@ namespace Converter_WPF
 			// dataGridList Validation
 			// Update MainWindow.databaseAPI.Currencies from validated dataGridList
 
-			MainWindow.databaseAPI.Save();
-        }
+			//принимает полный список валют
+			//проверяет валидные значения
 
-    }
+			foreach(Currency currency in dataGridList)
+            {
+				if (!currency.isValid())
+					MainWindow.databaseAPI.Currencies.Remove(currency);
+			}
+
+			MainWindow.databaseAPI.Rewrite(MainWindow.databaseAPI.Currencies);
+			dataGridList = new List<Currency>(MainWindow.databaseAPI.Currencies);
+			currencyDataGrid.ItemsSource = dataGridList;
+
+		}
+	}
 }

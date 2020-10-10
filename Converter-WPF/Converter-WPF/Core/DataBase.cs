@@ -62,7 +62,7 @@ namespace DATABASE
 				currency.Add(new Currency(defCrncs[i], 0));
 			}
 
-			Save();
+			Rewrite(currency);
 		}
 
 		private bool Load()
@@ -97,7 +97,7 @@ namespace DATABASE
 			return true;
 		}
 
-		public void Save()
+		public void Rewrite(List<Currency> currencies)
 		{
 			StreamWriter sw;
 
@@ -110,10 +110,10 @@ namespace DATABASE
 				return;
 			}
 
-			for (int i = 0; i < currency.Count; i++)
+			for (int i = 0; i < currencies.Count; i++)
 			{
-				sw.WriteLine(currency[i].Name);
-				currency[i].Rate = 1.0;
+				sw.WriteLine(currencies[i].Name);
+				currencies[i].Rate = 1.0;
 			}
 			sw.Close();
 		}

@@ -52,7 +52,7 @@
 
 
             <!--Menu-->
-            <Border Grid.Column="0" Margin="0,0,5,0" Background="Gray">
+            <Border Grid.Column="0" Background="Gray">
                 <StackPanel VerticalAlignment="Top">
                     <TextBlock Text="Menu" HorizontalAlignment="Center"/>
                     <Button x:Name="btn_ChooseConverter" Content="Converter" Width = "120" BorderThickness="0" Background="{x:Null}" Click="btn_ChooseConverter_Click"/>

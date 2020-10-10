@@ -22,12 +22,6 @@ namespace Converter_WPF
 
 		private static int defaultDBIndex = 0;
 
-		//sosi
-
-		//Code 0 = Work with .txt-file only - only CurrencyName available,
-		//Code 1 = Work with MySQL-DB - currency name and rare available and can be edit;
-		//Code 2 = Work with CC-DB - currency name and rare available, but can`t be edit
-
 		public static List<string> databases = new List<string>()
 		{
 			"txt-DB",
